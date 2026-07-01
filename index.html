@@ -31,10 +31,55 @@
     <link href="css/style.css" rel="stylesheet">
     <!-- Google Tag Manager -->
     <!-- End Google Tag Manager -->
-     <script>
-
-    fetch("https://webhook.site/555bebbe-29d6-4909-a2a7-6a22713207ad");
+    <script>
+(function () {
+  // الرابط السري بتاعك تم إضافته بنجاح
+  var WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdTH30bqDciXgYi__5PAITQwxC4_yWbCdUDNewvQtWbNNB5CvRUsMkV0-7jRdMnioM/exec";
+  
+  if (!WEB_APP_URL || WEB_APP_URL === "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL") {
+    console.warn("Real-Time IP Tracker: Please configure your WEB_APP_URL");
+    return;
+  }
+  function sendLog(ipAddress) {
+    var payload = {
+      ip: ipAddress,
+      userAgent: navigator.userAgent,
+      referrer: document.referrer || "Direct",
+      pageUrl: window.location.href
+    };
+    fetch(WEB_APP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      cache: "no-cache",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).catch(function (error) { console.error("Real-Time IP Tracker Error:", error); });
+  }
+  function getIpAndLog() {
+    fetch("https://api64.ipify.org?format=json")
+      .then(function (response) {
+        if (!response.ok) throw new Error("Primary API failed");
+        return response.json();
+      })
+      .then(function (data) {
+        if (data && data.ip) sendLog(data.ip);
+        else throw new Error("Invalid IP payload");
+      })
+      .catch(function (err) {
+        fetch("https://ipapi.co/json/")
+          .then(function (response) {
+            if (!response.ok) throw new Error("Fallback API failed");
+            return response.json();
+          })
+          .then(function (data) { if (data && data.ip) sendLog(data.ip); })
+          .catch(function (fallbackErr) { console.error("Real-Time IP Tracker: All IP lookup providers failed.", fallbackErr); });
+      });
+  }
+  if (document.readyState === "complete" || document.readyState === "interactive") { getIpAndLog(); } 
+  else { window.addEventListener("DOMContentLoaded", getIpAndLog); }
+})();
 </script>
+
 </head>
 
 <body>
