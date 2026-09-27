@@ -14,6 +14,18 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class GuestPageCacheProfile extends CacheAllSuccessfulGetRequests
 {
+    /**
+     * Never serve or store the cache while a form round-trip is in flight (validation errors / old input).
+     */
+    public function enabled(Request $request): bool
+    {
+        if ($request->hasSession() && ($request->session()->has('errors') || $request->session()->has('_old_input'))) {
+            return false;
+        }
+
+        return parent::enabled($request);
+    }
+
     public function shouldCacheRequest(Request $request): bool
     {
         if (Auth::check() || $request->hasSession() && $request->session()->has('cart')) {

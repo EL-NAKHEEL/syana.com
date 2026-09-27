@@ -3,7 +3,9 @@
 namespace App\Support;
 
 use App\Models\Page;
+use App\Models\Service;
 use App\Settings\BusinessSettings;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -15,6 +17,9 @@ class Navigation
     /** @var array<int, string>|null */
     private ?array $publishedPages = null;
 
+    /** @var Collection<int, Service>|null */
+    private ?Collection $services = null;
+
     public function __construct(private readonly BusinessSettings $business) {}
 
     /**
@@ -24,6 +29,7 @@ class Navigation
     {
         return $this->filter([
             ['label' => 'الرئيسية', 'route' => 'home', 'page' => 'home'],
+            ['label' => 'خدماتنا', 'route' => 'services.index', 'when' => 'services'],
             ['label' => 'من نحن', 'route' => 'about', 'page' => 'about'],
             ['label' => 'تواصل معنا', 'route' => 'contact', 'page' => 'contact'],
         ]);
@@ -37,9 +43,20 @@ class Navigation
     public function footer(): array
     {
         return $this->filter([
+            ['label' => 'خدماتنا', 'route' => 'services.index', 'when' => 'services'],
             ['label' => 'من نحن', 'route' => 'about', 'page' => 'about'],
             ['label' => 'تواصل معنا', 'route' => 'contact', 'page' => 'contact'],
         ]);
+    }
+
+    /**
+     * Live services for menus (memoized per request).
+     *
+     * @return Collection<int, Service>
+     */
+    public function services(): Collection
+    {
+        return $this->services ??= Service::query()->live()->get(['id', 'slug', 'name', 'requires_24_7', 'is_published', 'published_at']);
     }
 
     public function reviewUrl(): ?string
@@ -48,7 +65,7 @@ class Navigation
     }
 
     /**
-     * @param  array<int, array{label: string, route: string, page?: string}>  $items
+     * @param  array<int, array{label: string, route: string, page?: string, when?: string}>  $items
      * @return array<int, array{label: string, url: string, route: string}>
      */
     private function filter(array $items): array
@@ -60,6 +77,9 @@ class Navigation
                 continue;
             }
             if (isset($item['page']) && $item['page'] !== 'home' && ! in_array($item['page'], $this->publishedPages(), true)) {
+                continue;
+            }
+            if (($item['when'] ?? null) === 'services' && $this->services()->isEmpty()) {
                 continue;
             }
             $live[] = ['label' => $item['label'], 'url' => route($item['route']), 'route' => $item['route']];

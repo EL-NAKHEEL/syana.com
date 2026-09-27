@@ -18,6 +18,7 @@ function crawlSite(object $test): SiteCrawler
 
 beforeEach(function () {
     publishCorePages();
+    publishServices();
 });
 
 it('reaches every published page with a 200 and no broken internal links', function () {

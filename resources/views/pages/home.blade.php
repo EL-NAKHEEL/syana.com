@@ -104,15 +104,21 @@
                         <p>{{ Copy::text($services['intro']) }}</p>
                     @endif
                 </div>
+                @php($liveServices = app(\App\Support\Navigation::class)->services()->keyBy('slug'))
                 <ul class="service-grid">
                     @foreach ($services['items'] ?? [] as $item)
+                        @php($linked = $liveServices->get($item['service'] ?? ''))
                         <li class="service-card">
                             @if (! empty($item['image']))
                                 <x-picture class="service-card__img" :name="$item['image']" :alt="$item['title']" sizes="106px" />
                             @endif
-                            <h3>{{ $item['title'] }}</h3>
+                            <h3>@if ($linked)<a href="{{ $linked->url() }}">{{ $item['title'] }}</a>@else{{ $item['title'] }}@endif</h3>
                             <p>{{ Copy::text($item['text']) }}</p>
-                            <a class="btn" href="tel:{{ config('site.phone.e164') }}" data-track="click_call" data-track-location="service_card">اضغط للاتصال</a>
+                            @if ($linked)
+                                <a class="btn" href="{{ $linked->url() }}">التفاصيل</a>
+                            @else
+                                <a class="btn" href="tel:{{ config('site.phone.e164') }}" data-track="click_call" data-track-location="service_card">اضغط للاتصال</a>
+                            @endif
                         </li>
                     @endforeach
                 </ul>

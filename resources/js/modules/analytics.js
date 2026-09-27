@@ -47,6 +47,9 @@ export function initAnalytics() {
         else window.addEventListener('load', start, { once: true });
     }
 
+    // Conversion pages (thank-you) fire their event once on load.
+    document.querySelectorAll('[data-track-onload]').forEach((el) => track(el.dataset.trackOnload));
+
     document.addEventListener('click', (event) => {
         const el = event.target.closest('[data-track]');
         if (!el) return;

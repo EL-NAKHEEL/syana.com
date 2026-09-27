@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             // Every admin must enrol an authenticator app (with recovery codes) before using the panel.
+            ->databaseNotifications()
             ->multiFactorAuthentication([
                 AppAuthentication::make()->recoverable(),
             ], isRequired: true)
@@ -37,7 +38,7 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => '#FF5E14',
                 'gray' => '#5F656F',
             ])
-            ->navigationGroups(['المحتوى', 'SEO', 'الإعدادات'])
+            ->navigationGroups(['الطلبات', 'المحتوى', 'SEO', 'الإعدادات'])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

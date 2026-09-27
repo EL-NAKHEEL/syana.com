@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\AffectsPublicPages;
+use App\Models\Concerns\BlocksUnconfirmedContent;
 use App\Models\Concerns\HasSeoMeta;
 use App\Models\Concerns\Publishable;
 use App\Models\Concerns\TracksContentModification;
@@ -14,7 +15,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
-use Illuminate\Validation\ValidationException;
 
 /**
  * Fixed-route pages (home, about, contact, policies). The slug is the route key, not a URL segment,
@@ -38,36 +38,13 @@ use Illuminate\Validation\ValidationException;
 class Page extends Model implements HasSeo
 {
     /** @use HasFactory<PageFactory> */
-    use AffectsPublicPages, HasFactory, HasSeoMeta, Publishable, TracksContentModification;
+    use AffectsPublicPages, BlocksUnconfirmedContent, HasFactory, HasSeoMeta, Publishable, TracksContentModification;
 
     public const TEMPLATES = ['home' => 'الرئيسية', 'about' => 'من نحن', 'contact' => 'تواصل معنا', 'default' => 'صفحة عادية'];
 
     protected function casts(): array
     {
         return ['data' => 'array'];
-    }
-
-    protected static function booted(): void
-    {
-        static::saving(function (self $page): void {
-            if (filled($page->body)) {
-                $page->body = clean($page->body);
-            }
-
-            // Content honesty: unconfirmed facts ([TODO: …]) can never go live.
-            if ($page->is_published && $page->containsTodo()) {
-                throw ValidationException::withMessages([
-                    'is_published' => 'الصفحة فيها [TODO] — لازم تتأكد من المعلومات دي قبل النشر.',
-                ]);
-            }
-        });
-    }
-
-    public function containsTodo(): bool
-    {
-        $haystack = implode(' ', [$this->title, $this->intro, $this->body, json_encode($this->data, JSON_UNESCAPED_UNICODE)]);
-
-        return str_contains($haystack, '[TODO');
     }
 
     public function contentAttributes(): array

@@ -3,6 +3,7 @@
 use App\Http\Middleware\CanonicalizeRequest;
 use App\Http\Middleware\LogNotFound;
 use App\Http\Middleware\NoindexOutsideProduction;
+use App\Http\Middleware\ResetRequestState;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -21,7 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Behind a CDN/load balancer the scheme must be trusted, or the https redirect would loop.
         $middleware->trustProxies(at: env('TRUSTED_PROXIES', '*'));
 
-        $middleware->prepend(CanonicalizeRequest::class);
+        $middleware->prepend([ResetRequestState::class, CanonicalizeRequest::class]);
         $middleware->append([SecurityHeaders::class, NoindexOutsideProduction::class, LogNotFound::class]);
 
         $middleware->preventRequestForgery(except: ['csp-report']);

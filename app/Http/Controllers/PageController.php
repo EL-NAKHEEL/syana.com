@@ -10,13 +10,19 @@ use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
-    public function __construct(private readonly Seo $seo) {}
+    /**
+     * Resolved per call: controller instances outlive a request in long-lived workers and tests.
+     */
+    private function seo(): Seo
+    {
+        return app(Seo::class);
+    }
 
     public function home(): View
     {
         $page = $this->resolve('home');
 
-        $this->seo
+        $this->seo()
             ->title('النخيل كوول | بيع وتركيب وصيانة التكييفات في مصر', false)
             ->description('النخيل كوول لبيع وتركيب وصيانة وتأسيس التكييفات للبيوت والشركات، بفنيين متخصصين ومعاينة قبل التنفيذ. اتصل 01055207525 أو كلمنا واتساب.')
             ->canonical(route('home'))
@@ -32,7 +38,7 @@ class PageController extends Controller
     {
         $page = $this->resolve('about');
 
-        $this->seo
+        $this->seo()
             ->title('من نحن: النخيل كوول لتكييفات البيوت والشركات')
             ->description('تعرّف على النخيل كوول: شركة مصرية لبيع وتركيب وصيانة وتأسيس التكييفات للبيوت والشركات، بفريق فني متخصص ومعاينة قبل أي شغل. اتصل بينا على 01055207525.')
             ->canonical(route('about'))
@@ -48,7 +54,7 @@ class PageController extends Controller
     {
         $page = $this->resolve('contact');
 
-        $this->seo
+        $this->seo()
             ->title('تواصل مع النخيل كوول: اتصال وواتساب')
             ->description('محتاج تركيب أو صيانة أو تأسيس تكييف؟ كلّم النخيل كوول على 01055207525 أو ابعت رسالة واتساب، وهنرد عليك ونحدد معاد المعاينة المناسب ليك.')
             ->canonical(route('contact'))
@@ -71,7 +77,7 @@ class PageController extends Controller
 
         if (! $page->isPublished()) {
             abort_unless(Auth::check(), 404);
-            $this->seo->preview();
+            $this->seo()->preview();
         }
 
         return $page;

@@ -46,5 +46,7 @@
         </div>
     </section>
 
+    <x-booking-form />
+
     <x-faq :faqs="$page->faqs" />
 </x-layout>

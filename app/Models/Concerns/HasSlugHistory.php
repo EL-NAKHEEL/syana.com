@@ -47,7 +47,7 @@ trait HasSlugHistory
     public static function findBySlugHistory(string $slug): ?static
     {
         $history = SlugHistory::query()
-            ->where('sluggable_type', (new static)->getMorphClass())
+            ->where('sluggable_type', static::query()->getModel()->getMorphClass())
             ->where('old_slug', $slug)
             ->first();
 

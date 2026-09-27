@@ -1,6 +1,7 @@
 <?php
 
 use App\Seo\Sitemap\PagesSitemap;
+use App\Seo\Sitemap\ServicesSitemap;
 
 return [
 
@@ -50,6 +51,7 @@ return [
     */
     'sitemaps' => [
         PagesSitemap::class,
+        ServicesSitemap::class,
     ],
 
     'security' => [
