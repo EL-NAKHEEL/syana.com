@@ -1,0 +1,39 @@
+/* Click-to-load facades for maps and YouTube (nothing third-party loads before a click). */
+.facade {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    inline-size: 100%;
+    overflow: hidden;
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.facade > img {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+}
+
+.facade > button {
+    position: relative;
+    z-index: 1;
+}
+
+.facade iframe {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    border: 0;
+}
+
+.picture img {
+    border-radius: var(--radius);
+}

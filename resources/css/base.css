@@ -1,0 +1,150 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-block-start: var(--s-8);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--fs-md);
+    line-height: 1.8;
+    font-variant-numeric: lining-nums;
+    text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    margin: 0 0 var(--s-4);
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.35;
+    text-wrap: balance;
+}
+
+h1 {
+    font-size: var(--fs-2xl);
+}
+
+h2 {
+    font-size: var(--fs-xl);
+}
+
+h3 {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+}
+
+p {
+    margin: 0 0 var(--s-4);
+    text-wrap: pretty;
+}
+
+a {
+    color: inherit;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+}
+
+img,
+svg,
+video {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+}
+
+ul,
+ol {
+    margin: 0 0 var(--s-4);
+    padding-inline-start: var(--s-5);
+}
+
+:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+.on-dark :focus-visible,
+:where(.site-footer, .lcd) :focus-visible {
+    outline-color: var(--t30);
+}
+
+.container {
+    inline-size: min(100% - 2 * var(--gutter), var(--container));
+    margin-inline: auto;
+}
+
+.skip-link {
+    position: absolute;
+    inset-inline-start: var(--s-4);
+    inset-block-start: -10rem;
+    z-index: 100;
+    padding: var(--s-3) var(--s-4);
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+}
+
+.skip-link:focus {
+    inset-block-start: var(--s-4);
+}
+
+.visually-hidden {
+    position: absolute !important;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.prose {
+    max-inline-size: 70ch;
+}
+
+.prose h2 {
+    margin-block-start: var(--s-7);
+}
+
+.prose h3 {
+    margin-block-start: var(--s-6);
+}
+
+.prose li + li {
+    margin-block-start: var(--s-2);
+}
+
+/* Phone numbers and other LTR runs inside RTL text. */
+.ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+}
+
+.todo {
+    background: #ffe28a;
+    outline: 2px dashed var(--t45);
+    padding-inline: var(--s-1);
+}
+
+.stack-top {
+    margin-block-start: var(--s-6);
+}

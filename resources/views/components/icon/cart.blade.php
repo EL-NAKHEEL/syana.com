@@ -1,0 +1,1 @@
+<svg {{ $attributes->merge(['viewBox' => '0 0 24 24', 'aria-hidden' => 'true', 'focusable' => 'false', 'fill' => 'currentColor']) }}><path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4m10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4M7.2 14.8h9.6c.8 0 1.4-.4 1.7-1l3.3-6.4A1 1 0 0 0 21 6H5.2l-.9-2H1v2h2l3.6 7.6-1.4 2.4C4.5 17.3 5.5 19 7 19h12v-2H7l1.1-2z"/></svg>

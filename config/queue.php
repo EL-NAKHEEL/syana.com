@@ -15,6 +15,9 @@ return [
 
     'default' => env('QUEUE_CONNECTION', 'database'),
 
+    // true on a VPS where Supervisor runs `queue:work`; false on shared hosting (the scheduler drains the queue).
+    'supervised' => (bool) env('QUEUE_SUPERVISED', false),
+
     /*
     |--------------------------------------------------------------------------
     | Queue Connections

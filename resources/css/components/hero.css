@@ -1,0 +1,236 @@
+/* ---------- Home hero (45°) ---------- */
+.hero {
+    position: relative;
+    overflow: clip;
+    padding-block: var(--s-7) var(--s-8);
+    background: var(--t45);
+    color: var(--paper);
+}
+
+.hero__grid {
+    display: grid;
+    gap: var(--s-7);
+    align-items: center;
+}
+
+@media (min-width: 56rem) {
+    .hero__grid {
+        grid-template-columns: 1.25fr 1fr;
+    }
+}
+
+/* One H1: slogan (visual hero) + keyword line. Visible from first paint: never animated. */
+.hero__title {
+    margin: 0 0 var(--s-5);
+}
+
+.hero__slogan {
+    display: block;
+    font-size: var(--fs-hero);
+    line-height: 1.15;
+    color: var(--paper);
+}
+
+.hero__keywords {
+    display: block;
+    margin-block-start: var(--s-3);
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--ink);
+}
+
+.hero__lead {
+    max-inline-size: 36ch;
+}
+
+/* Paper on --t45 is AA only as large text: everything readable in the hero is ≥ 1.25rem and bold. */
+.hero p {
+    font-size: var(--fs-lg);
+    font-weight: 600;
+    line-height: 1.7;
+}
+
+.hero .stamp {
+    margin-block-start: var(--s-5);
+    font-size: 1.25rem;
+    color: var(--paper);
+    mix-blend-mode: normal;
+}
+
+/* ---------- Retro split-unit illustration (decorative) ---------- */
+.ac-unit {
+    --temp: 24;
+
+    position: relative;
+    inline-size: min(100%, 26rem);
+    margin-inline: auto;
+}
+
+.ac-unit__body {
+    position: relative;
+    display: grid;
+    gap: var(--s-4);
+    padding: var(--s-5) var(--s-5) var(--s-4);
+    border: 3px solid var(--ink);
+    border-radius: var(--radius-lg) var(--radius-lg) var(--radius) var(--radius);
+    background: linear-gradient(180deg, var(--paper) 0 70%, #f3e6cf 100%);
+    box-shadow: 0 10px 0 var(--ink);
+    color: var(--ink);
+}
+
+.ac-unit__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+}
+
+.ac-unit__badge {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-sm);
+}
+
+.ac-unit__lcd {
+    --lcd-size: 3.25rem;
+}
+
+.temp-readout::before {
+    counter-reset: temp var(--temp);
+    content: counter(temp) '°';
+}
+
+.ac-unit__vents {
+    display: grid;
+    gap: 5px;
+    perspective: 400px;
+}
+
+.ac-unit__vents > span {
+    display: block;
+    block-size: 9px;
+    border-radius: 3px;
+    transform-origin: 50% 0;
+    transform: rotateX(50deg);
+}
+
+.ac-unit__vents > span:nth-child(1) { background: var(--t45); }
+.ac-unit__vents > span:nth-child(2) { background: var(--t38); }
+.ac-unit__vents > span:nth-child(3) { background: var(--t30); }
+.ac-unit__vents > span:nth-child(4) { background: var(--t24); border: 1px solid rgb(31 18 12 / 0.2); }
+
+.ac-unit__air {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    padding-block-start: var(--s-4);
+}
+
+.ac-unit__air > span {
+    display: block;
+    block-size: 4px;
+    inline-size: 70%;
+    border-radius: 4px;
+    background: var(--t24);
+    opacity: 0.8;
+}
+
+.ac-unit__air > span:nth-child(2) { inline-size: 50%; opacity: 0.6; }
+.ac-unit__air > span:nth-child(3) { inline-size: 30%; opacity: 0.4; }
+
+/* ---------- Louver intro: ≤ 600 ms, once per session (html.intro set inline), transform only ---------- */
+@property --temp {
+    syntax: '<integer>';
+    inherits: true;
+    initial-value: 24;
+}
+
+@keyframes vent-open {
+    from { transform: rotateX(0deg); }
+    to { transform: rotateX(50deg); }
+}
+
+@keyframes cool-down {
+    from { --temp: 45; }
+    to { --temp: 24; }
+}
+
+@keyframes stripe-in {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+}
+
+@keyframes air-in {
+    from { transform: translateY(-8px) scaleX(0.4); }
+    to { transform: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .intro .ac-unit {
+        animation: cool-down 600ms steps(21, end) both;
+    }
+
+    .intro .ac-unit__vents > span {
+        animation: vent-open 380ms var(--ease) both;
+    }
+
+    .intro .ac-unit__vents > span:nth-child(2) { animation-delay: 60ms; }
+    .intro .ac-unit__vents > span:nth-child(3) { animation-delay: 120ms; }
+    .intro .ac-unit__vents > span:nth-child(4) { animation-delay: 180ms; }
+
+    .intro .ac-unit__air > span {
+        animation: air-in 300ms var(--ease) 300ms both;
+    }
+
+    .intro .site-header > .louver > span {
+        transform-origin: 100% 50%;
+        animation: stripe-in 420ms var(--ease) both;
+    }
+
+    .intro .site-header > .louver > span:nth-child(2) { animation-delay: 50ms; }
+    .intro .site-header > .louver > span:nth-child(3) { animation-delay: 100ms; }
+    .intro .site-header > .louver > span:nth-child(4) { animation-delay: 150ms; }
+}
+
+/* ---------- Heat haze: desktop with hover only, cheap transform animation ---------- */
+@keyframes haze {
+    from { transform: translateY(20%) scaleY(1); }
+    to { transform: translateY(-30%) scaleY(1.2); }
+}
+
+@media (min-width: 64rem) and (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .hero::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -20%;
+        block-size: 60%;
+        background: radial-gradient(60% 40% at 50% 60%, rgb(255 221 156 / 0.22), transparent 70%);
+        pointer-events: none;
+        animation: haze 6s ease-in-out infinite alternate;
+    }
+}
+
+/* ---------- Scroll thermometer: the home page cools from 45° to 24° (desktop, decorative) ---------- */
+.thermo {
+    display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+    @media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+        .thermo {
+            --temp: 45;
+
+            position: fixed;
+            inset-inline-start: var(--s-5);
+            inset-block-end: var(--s-5);
+            z-index: 15;
+            display: inline-flex;
+            --lcd-size: 2rem;
+            animation: cool-down linear both;
+            animation-timeline: scroll(root);
+        }
+    }
+}

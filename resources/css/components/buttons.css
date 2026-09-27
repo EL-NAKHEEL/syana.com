@@ -1,0 +1,62 @@
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    min-block-size: var(--tap);
+    padding: var(--s-2) var(--s-5);
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 var(--ink);
+}
+
+.btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 var(--ink);
+}
+
+.btn svg {
+    inline-size: 1.25em;
+    block-size: 1.25em;
+    flex: none;
+}
+
+/* Actions: --t38 with ink text (never white on orange). */
+.btn--primary {
+    background: var(--t38);
+    color: var(--ink);
+}
+
+.btn--ink {
+    background: var(--ink);
+    color: var(--t30);
+}
+
+.btn--paper {
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.btn--lg {
+    min-block-size: 3.5rem;
+    padding-inline: var(--s-6);
+    font-size: var(--fs-lg);
+}
+
+.btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+}

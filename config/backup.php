@@ -25,9 +25,9 @@ return [
                 /*
                  * The list of directories and files that will be included in the backup.
                  */
+                // Code lives in git; back up what only exists on the server: uploaded media.
                 'include' => [
-                    base_path(),
-                    // storage_path(),  // Include if you use zero downtime deployments and don't follow symlinks
+                    storage_path('app/public'),
                 ],
 
                 /*
@@ -163,9 +163,8 @@ return [
             /*
              * The disk names on which the backups will be stored.
              */
-            'disks' => [
-                'local',
-            ],
+            // Off-server destination(s) from .env, e.g. BACKUP_DISKS=backups (S3-compatible, see filesystems.php).
+            'disks' => array_filter(explode(',', (string) env('BACKUP_DISKS', 'local'))),
 
             /*
              * Determines whether to allow backups to continue when some targets fail instead of failing completely.
@@ -236,7 +235,7 @@ return [
         'notifiable' => Notifiable::class,
 
         'mail' => [
-            'to' => 'your@example.com',
+            'to' => env('NOTIFY_EMAIL') ?: 'not-configured@example.invalid',
 
             'from' => [
                 'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
@@ -297,7 +296,7 @@ return [
     'monitor_backups' => [
         [
             'name' => env('APP_NAME', 'laravel-backup'),
-            'disks' => ['local'],
+            'disks' => array_filter(explode(',', (string) env('BACKUP_DISKS', 'local'))),
             'health_checks' => [
                 MaximumAgeInDays::class => 1,
                 MaximumStorageInMegabytes::class => 5000,

@@ -1,0 +1,25 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 6
+    paths:
+        - app
+        - config
+        - database
+        - routes
+    excludePaths:
+        - database/content
+        # Vendor-published configs that reference optional packages (MediaLibrary Pro, laravel-data).
+        - config/media-library.php
+        - config/settings.php
+    ignoreErrors:
+        # Used by the catalog/service/area models from P2 on; covered by tests/Feature/SlugHistoryTest.php now.
+        -
+            identifier: trait.unused
+            path: app/Models/Concerns/HasSlugHistory.php
+        # spatie/laravel-settings derives casts from docblock types and cannot parse array generics,
+        # so these two settings arrays must stay untyped (see comments in the class).
+        -
+            identifier: missingType.iterableValue
+            path: app/Settings/BusinessSettings.php

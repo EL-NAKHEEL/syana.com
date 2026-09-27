@@ -1,6 +1,6 @@
 # PLAN — النخيل كوول (Al Nakheel Cool) production website
 
-Status: **approved 2026-09-27** (decisions in §0) · Date: 2026-09-27 · Branch: `claude/friendly-galileo-tdpcze`
+Status: **approved 2026-09-27** (decisions in §0) · Progress: **P1 done** · Date: 2026-09-27 · Branch: `claude/friendly-galileo-tdpcze`
 
 Nothing in this plan is built yet. Items marked **[Q#]** depend on an open question in §12.
 Items marked **[TODO]** are unknown facts that must come from the business, never be invented.

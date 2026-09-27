@@ -1,0 +1,49 @@
+/* Self-hosted OFL subsets (resources/fonts/README.md). Western digits only; no letter-spacing on Arabic. */
+@font-face {
+    font-family: 'Changa';
+    src: url('../fonts/web/changa-800.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Changa';
+    src: url('../fonts/web/changa-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Nakheel Body';
+    src: url('../fonts/web/plex-arabic-400.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Nakheel Body';
+    src: url('../fonts/web/plex-arabic-500.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Nakheel Body';
+    src: url('../fonts/web/plex-arabic-600.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Handjet LCD';
+    src: url('../fonts/web/handjet-lcd.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0020, U+0030-0039, U+00B0;
+}

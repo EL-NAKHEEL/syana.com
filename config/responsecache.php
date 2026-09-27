@@ -1,6 +1,6 @@
 <?php
 
-use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
+use App\Http\Cache\GuestPageCacheProfile;
 use Spatie\ResponseCache\Hasher\DefaultHasher;
 use Spatie\ResponseCache\Replacers\CsrfTokenReplacer;
 use Spatie\ResponseCache\Serializers\JsonSerializer;
@@ -94,6 +94,11 @@ return [
         'utm_content',
         'gclid',
         'fbclid',
+        'utm_id',
+        'gbraid',
+        'wbraid',
+        'msclkid',
+        'ttclid',
     ],
 
     /*
@@ -101,7 +106,7 @@ return [
      * By default all successful GET-requests will be cached.
      * You can provide your own by using the CacheProfile.
      */
-    'cache_profile' => CacheAllSuccessfulGetRequests::class,
+    'cache_profile' => GuestPageCacheProfile::class,
 
     /*
      * This class is responsible for generating a hash for
