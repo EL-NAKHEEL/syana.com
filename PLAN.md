@@ -1,9 +1,38 @@
 # PLAN — النخيل كوول (Al Nakheel Cool) production website
 
-Status: **draft for approval** · Date: 2026-09-27 · Branch: `claude/friendly-galileo-tdpcze`
+Status: **approved 2026-09-27** (decisions in §0) · Date: 2026-09-27 · Branch: `claude/friendly-galileo-tdpcze`
 
 Nothing in this plan is built yet. Items marked **[Q#]** depend on an open question in §12.
 Items marked **[TODO]** are unknown facts that must come from the business, never be invented.
+
+---
+
+## 0. Decisions log (2026-09-27)
+
+Blank answers keep the default in §12 and stay `[TODO]`. Nothing unconfirmed is published.
+
+| # | Decision |
+|---|---|
+| Q1 | Build from spec §7. If a Claude Design export later lands in `./design`, re-skin the components to match it, **tokens first**. |
+| Q2 | Non-www canonical host. Domain `[TODO]` — everything reads `APP_URL`. |
+| Q3 | GBP and social links `[TODO]` → `sameAs` empty, review button hidden until set in settings. |
+| Q4 | **01055207525** is the only number in calls, WhatsApp and schema. 01207720574 stays private (default). Email: `elnakheel55@gmail.com` is stored in settings as a draft, **hidden until confirmed** (the answer was left in template brackets). The personal address from the old `mailto` is never published anywhere. |
+| Q5 | Office status `[TODO]` → service-area business, no address/geo. |
+| Q6 | Hours `[TODO]`; no 24/7 claims; `/services/emergency-ac-repair` stays unpublished. |
+| Q7 | Brands, dealer status, types `[TODO]` → no brand/dealer claims, no seeded real brands published. |
+| Q8 | Installation-in-price, delivery, returns, installments `[TODO]` → no shippingDetails/return-policy schema until confirmed. |
+| Q9 | Facets own brand/capacity price queries (with a live price table, change 2); `/prices` = cross-brand comparison + service costs. |
+| Q10 | Hosting not chosen; target PHP 8.4, MySQL 8, SSH, cron. |
+| Q11 | This repo; old site in `legacy/old-site/`; merge to `main` only at launch. **Never commit `.env` or any secret.** |
+| Q12–Q14 | Areas, E-E-A-T facts, starting prices `[TODO]`; services show «السعر بعد المعاينة». |
+| Q15 | Simplified MSA for titles, meta, H1s and specs; light Egyptian colloquial for CTAs, the hero slogan and friendly body copy. |
+| Q16 | Filament database notifications + email to `[TODO]` (`MAIL_*` / `NOTIFY_EMAIL` in `.env`). |
+| Q17 | Calculator coefficients are configurable defaults flagged `[TODO confirm]`. |
+| C1 | Area publish guard: approved local reviews **optional** (threshold 0); all other fields required. **Hubs** (areas, projects, reviews, blog) are `noindex, follow` and out of the sitemap until they have **≥ 3 published items**. |
+| C2 | Facet pages show a compact **live price table** above the grid (model, HP, type, price, sale price) with «آخر تحديث»; keyword map adds the colloquial plurals «تكييف 3 حصنة / 4 حصنة / 5 حصنة». |
+| C3 | Old image redirects list **exact old file paths** only — no `/img/*` wildcard. |
+| C4 | Home has one H1 holding slogan + keyword line: `<h1><span>خلّي الحرّ برّه.</span> <span>بيع وتركيب وصيانة التكييفات في مصر</span></h1>`. |
+| C5 | Security (§6.9): Filament MFA required for every admin, login throttling, security headers (HSTS once HTTPS is live, CSP report-only first, `X-Content-Type-Options`, `Referrer-Policy`, …), spatie/laravel-backup on by default (daily DB + media to an off-server disk from `.env`). |
 
 ---
 
@@ -116,7 +145,7 @@ Conventions: `id` bigint, `timestamps`, `slug` unique per table, `is_published` 
 | Table | Columns |
 |---|---|
 | `services` | `slug`, `name`, `h1`, `summary`, `intro`, structured sections: `included` (json list), `warning_signs` (json), `process_steps` (json), `price_factors` (json), `body`, `starting_price` nullable, `price_unit_note`, `schema_service_type`, `requires_24_7` (bool, hides page unless settings say 24/7) , `sort`, publish fields |
-| `areas` | `name_ar`, `name_en`, `slug`, `governorate`, `local_intro`, `response_time_note`, `local_notes`, `show_in_footer`, `sort`, publish fields. **Publish guard**: intro ≥ 150 words, response time, local notes, ≥ 1 service, ≥ 2 local FAQs, ≥ 1 nearby area, ≥ 1 approved local review (threshold configurable) |
+| `areas` | `name_ar`, `name_en`, `slug`, `governorate`, `local_intro`, `response_time_note`, `local_notes`, `show_in_footer`, `sort`, publish fields. **Publish guard**: intro ≥ 150 words, response time, local notes, ≥ 1 service, ≥ 2 local FAQs, ≥ 1 nearby area; approved local reviews optional (`areas.min_reviews` setting, default 0) |
 | `area_service` | `area_id`, `service_id`, `note` (local availability/price note) |
 | `area_neighbors` | `area_id`, `neighbor_id` |
 | `price_guides` | `slug`, `title`, `h1`, `intro`, `scope` (`brand`,`capacity`,`type`,`service`,`all`), `brand_id`/`hp`/`type`/`service_id` nullable, `body`, `show_year` (auto), publish fields; the table body is rendered from live `products`/`services` rows — no prices stored here |
@@ -188,7 +217,7 @@ GitHub Pages stubs in P5 (`<link rel="canonical">` + `<meta http-equiv="refresh"
 | `/feature.html` | `/about` (its “why us” content moves there) |
 | `/testimonial.html` (linked, never existed) | `/reviews` |
 | `/tarkeeb.html.html`, `/tagheez.html.html.html` (broken links that were crawlable) | `/services/ac-installation`, `/services/ac-preparation` |
-| `/img/*` hot links | 410 (no replacements for stock photos) |
+| Exact old image paths (`/img/carousel-1.jpg`, `/img/feature.jpg`, … one row per file in `legacy/old-site/img/`) | 410 Gone (stock photos, no replacement). No wildcard, so new-site images can never match |
 
 ---
 
@@ -228,15 +257,15 @@ GitHub Pages stubs in P5 (`<link rel="canonical">` + `<meta http-equiv="refresh"
 | Product | `تكييف {brand} {hp} حصان {cooling} {inverter?} {model} \| النخيل كوول` (drops `{model}` then suffix if > 60) | price, warranty, stock, install note, CTA | Product + Offer (+ StrikethroughPrice UnitPriceSpecification on sale, shippingDetails, hasMerchantReturnPolicy), BreadcrumbList; `aggregateRating`/`review` only from approved product reviews shown on the page | ✔ (also out of stock) | products + `<image:image>` (`content_modified_at`) |
 | Services hub | `خدمات التكييف: صيانة وتركيب وتأسيس \| النخيل كوول` | | CollectionPage, BreadcrumbList | ✔ | services |
 | Service | admin-authored, fallback `{service_name} \| النخيل كوول` | starting price if known + CTA | Service (serviceType, provider→`#organization`, areaServed from published areas, offers.priceSpecification min price), WebPage, BreadcrumbList | ✔ | services |
-| Areas hub | `مناطق خدمة النخيل كوول: صيانة وتركيب التكييفات` | | CollectionPage, BreadcrumbList | ✔ | areas |
+| Areas hub | `مناطق خدمة النخيل كوول: صيانة وتركيب التكييفات` | | CollectionPage, BreadcrumbList | hub rule (≥ 3 published) | areas |
 | Area | `صيانة وتركيب تكييفات في {area} \| النخيل كوول` | response time + services + CTA | WebPage + Service (areaServed = that Place) — **no LocalBusiness per area**, BreadcrumbList | only when publish guard passes | areas |
 | Prices hub | `أسعار التكييفات وخدمات التركيب والصيانة {year} \| النخيل كوول` | | CollectionPage, BreadcrumbList | ✔ | prices |
 | Price guide | admin title, e.g. `تكلفة تركيب التكييف {year}: بالتفصيل \| النخيل كوول` | "آخر تحديث {date}" + CTA | WebPage (`dateModified` = last real price change), BreadcrumbList; **no Product markup** | ✔ | prices (last real price change) |
-| Reviews | `آراء عملاء النخيل كوول في التكييفات` (+ page N) | | WebPage, BreadcrumbList — **no aggregateRating** (self-serving) | ✔ | pages |
-| Blog hub / category | `مدونة النخيل كوول: نصائح التكييف` / `{category} \| مدونة النخيل كوول` | | CollectionPage (+Blog), BreadcrumbList | ✔ (≥ 1 post) | posts |
+| Reviews | `آراء عملاء النخيل كوول في التكييفات` (+ page N) | | WebPage, BreadcrumbList — **no aggregateRating** (self-serving) | hub rule (≥ 3 approved) | pages |
+| Blog hub / category | `مدونة النخيل كوول: نصائح التكييف` / `{category} \| مدونة النخيل كوول` | | CollectionPage (+Blog), BreadcrumbList | hub rule (≥ 3 posts; same for categories) | posts |
 | Post | `{title} \| النخيل كوول` (suffix dropped if > 60) | excerpt | BlogPosting (author→Person `@id`, datePublished, dateModified=`content_modified_at`, image, publisher→`#organization`), BreadcrumbList | ✔ | posts |
 | Author | `{name}: {job_title} \| النخيل كوول` | | ProfilePage (mainEntity Person), BreadcrumbList | ✔ (≥ 1 post) | posts |
-| Projects hub / project | `مشاريع النخيل كوول في التكييف` / `{title} في {area} \| النخيل كوول` | | CollectionPage / WebPage (+ ImageObject), BreadcrumbList | ✔ | projects |
+| Projects hub / project | `مشاريع النخيل كوول في التكييف` / `{title} في {area} \| النخيل كوول` | | CollectionPage / WebPage (+ ImageObject), BreadcrumbList | hub: hub rule (≥ 3); project: ✔ | projects |
 | About / Contact / policies | fixed per page | | AboutPage / ContactPage / WebPage | ✔ | pages |
 | Cart / checkout / search / thank-you | fixed | | none | noindex, follow; robots Disallow for `/cart` `/checkout` `/search` | ✗ |
 | 404 | `الصفحة غير موجودة \| النخيل كوول` | | none | noindex, status 404 | ✗ |
@@ -248,6 +277,8 @@ GitHub Pages stubs in P5 (`<link rel="canonical">` + `<meta http-equiv="refresh"
 local-business rich result — that is expected for a service-area business; local ranking comes from the Business Profile.
 
 ### 6.3 Facet (curated) pages
+- Above the grid: a compact **price table from live data** (model, HP, type, price, sale price) with «آخر تحديث» = latest
+  real price change in scope — this is what lets facets own «أسعار تكييف …» queries (Q9). Prices are text in a `<table>`.
 - Only the four path shapes in §4 exist; any other combination is reachable only via GET filters on `/store` (noindex).
 - A facet is **indexable** iff: `facet_pages` row published ∧ unique intro filled ∧ ≥ 3 live (published, not discontinued) products.
   Otherwise it still renders (200, useful for users) with `noindex, follow` and is omitted from the sitemap.
@@ -289,6 +320,18 @@ local-business rich result — that is expected for a service-area business; loc
   `purchase` (thank-you), `generate_lead` (booking/contact success).
 - `google-site-verification`, `msvalidate.01` meta tags from settings.
 
+### 6.9 Security (a hacked site serving spam wipes out rankings)
+- Filament panel: MFA **required** for every admin (TOTP app authentication, recovery codes); login rate-limited
+  (Filament’s throttle + `RateLimiter` 5/min per IP+email); admin at `/admin`, disallowed in robots, `noindex` header.
+- `SecurityHeaders` middleware: `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`,
+  `X-Frame-Options: SAMEORIGIN`, `Permissions-Policy` (camera/mic/geolocation off), `Cross-Origin-Opener-Policy: same-origin`;
+  **HSTS** only when `SECURITY_HSTS=true` (enable after HTTPS is verified); **CSP** in `Content-Security-Policy-Report-Only`
+  by default (`SECURITY_CSP_ENFORCE=false`), report endpoint logs violations; switch to enforce after a clean week.
+- Public forms: CSRF, honeypot, throttling; admin rich text sanitized (purifier); uploads restricted to images.
+- Backups: spatie/laravel-backup scheduled daily (DB + `storage/app/public` media) to `BACKUP_DISK` (S3-compatible
+  off-server disk from `.env`), cleanup + monitor, failure mail to the notification address.
+- `.env`, keys and credentials never committed (`.gitignore` + a test that fails if `.env` is tracked).
+
 ---
 
 ## 7. Keyword → page map (one primary intent per page)
@@ -303,6 +346,7 @@ body copy and headings — no stuffing.
 | `/store/brand/{brand}` | تكييف {brand} + أسعار تكييف {brand} (commercial) | موديلات، توكيل **[Q7]** |
 | `/store/capacity/1-5-hp` | تكييف 1.5 حصان + سعر تكييف 1.5 حصان | تكييف حصان ونص، 12000 وحدة |
 | `/store/capacity/2-25-hp` | تكييف 2.25 حصان | تكييف 2 وربع حصان، 18000 وحدة |
+| `/store/capacity/3-hp` · `4-hp` · `5-hp` | تكييف 3 / 4 / 5 حصان | colloquial plurals «تكييف 3 حصنة»، «4 حصنة»، «5 حصنة» |
 | `/store/type/split` … | تكييف سبليت / شباك / كونسيلد / كاسيت / دولابي | |
 | `/store/brand/{brand}/{hp}` | تكييف {brand} {hp} حصان | سعر |
 | `/store/{product}` | {brand} {model} (navigational/transactional) | سعر، مواصفات |
@@ -393,7 +437,7 @@ Posts are written only with facts we can support (manufacturer manuals for error
 | spatie/laravel-settings | ^3.9 | typed settings |
 | spatie/laravel-sluggable | ^4.0 | slug generation (history handled by our observer) |
 | spatie/laravel-honeypot | ^4.7 | spam protection on public forms |
-| spatie/laravel-backup | ^10.3 | DB + media backups (optional, recommended) |
+| spatie/laravel-backup | ^10.3 | **on by default**: daily DB + media to an off-server disk configured in `.env` |
 | intervention/image | ^4.3 | OG image rendering |
 | khaled.alshamaa/ar-php | ^7.0 | Arabic glyph shaping for GD text in OG images |
 | mews/purifier | ^3.4 | sanitize admin rich text |
@@ -412,7 +456,7 @@ runs in P5 against a production build using the pre-installed Chromium. **Minimu
 Laravel + Filament install, move old site to `legacy/old-site/`, settings, design tokens + fonts + core components,
 layout, SEO foundation (`SeoData` builder, title/description templates, canonical & robots resolvers, JSON-LD graph,
 OG image generator, sitemap framework, dynamic robots.txt, `CanonicalizeRequest`, redirects + slug history, 404 + log,
-non-production noindex), homepage with draft copy, about/contact skeletons, CLAUDE.md (step 3), SEO crawler test harness.
+non-production noindex), security baseline (§6.9: admin MFA, throttling, headers, backups), homepage with draft copy (C4 H1), about/contact skeletons, CLAUDE.md (step 3), SEO crawler test harness.
 
 **P2 — Catalog & commerce**
 Brands, products (+ CSV import in admin), price change log, facet pages + indexability rule, filters (GET form + PE),
