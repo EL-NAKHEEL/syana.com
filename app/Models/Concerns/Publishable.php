@@ -42,6 +42,6 @@ trait Publishable
 
     public function isPublished(): bool
     {
-        return $this->is_published && ($this->published_at === null || $this->published_at->isPast());
+        return $this->is_published && ($this->published_at === null || ! $this->published_at->isFuture());
     }
 }

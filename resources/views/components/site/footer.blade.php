@@ -26,10 +26,21 @@
             </ul>
         </section>
 
-        <section aria-labelledby="footer-about">
-            <h2 id="footer-about">{{ config('site.brand.name') }}</h2>
-            <p>بيع وتركيب وصيانة وتأسيس التكييفات للبيوت والشركات.</p>
-        </section>
+        @if (($footerAreas = $navigation->footerAreas())->isNotEmpty())
+            <section aria-labelledby="footer-areas">
+                <h2 id="footer-areas">مناطق الخدمة</h2>
+                <ul class="footer__links">
+                    @foreach ($footerAreas as $area)
+                        <li><a href="{{ $area->url() }}">صيانة تكييفات {{ $area->name_ar }}</a></li>
+                    @endforeach
+                </ul>
+            </section>
+        @else
+            <section aria-labelledby="footer-about">
+                <h2 id="footer-about">{{ config('site.brand.name') }}</h2>
+                <p>بيع وتركيب وصيانة وتأسيس التكييفات للبيوت والشركات.</p>
+            </section>
+        @endif
     </div>
     <div class="footer__copyright">
         <div class="container">

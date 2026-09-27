@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Page;
+use App\Models\PriceGuide;
 use App\Models\Service;
 use Illuminate\Database\Seeder;
 
@@ -53,6 +54,28 @@ class LegacyContentSeeder extends Seeder
             foreach ($faqs as $i => $faq) {
                 $service->faqs()->create([...$faq, 'sort' => $i]);
             }
+        }
+
+        /** @var array<int, array<string, mixed>> $guides */
+        $guides = require database_path('content/price-guides.php');
+
+        foreach ($guides as $content) {
+            if (PriceGuide::query()->where('slug', $content['slug'])->exists()) {
+                continue;
+            }
+
+            $slugs = $content['services'];
+            unset($content['services']);
+
+            $guide = PriceGuide::query()->create([...$content, 'is_published' => false]);
+            $ids = Service::query()->whereIn('slug', $slugs)->pluck('id', 'slug');
+            $pivot = [];
+            foreach (array_values($slugs) as $i => $slug) {
+                if ($ids->has($slug)) {
+                    $pivot[$ids[$slug]] = ['sort' => $i];
+                }
+            }
+            $guide->services()->sync($pivot);
         }
     }
 }

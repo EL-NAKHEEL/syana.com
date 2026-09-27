@@ -45,7 +45,14 @@ class ServiceController extends Controller
         /** @var Service $service */
         $service = $this->resolveRecord(Service::class, $slug, ['seoMeta', 'faqs'], fn (Service $s) => $s->isLive(), fn (Service $s) => $s->url());
 
-        $areas = Area::query()->published()->whereHas('services', fn ($q) => $q->whereKey($service->id))->orderBy('sort')->get();
+        $areas = Area::query()->published()
+            ->whereHas('services', fn ($q) => $q->whereKey($service->id))
+            ->withCount(['services', 'faqs', 'neighbors'])
+            ->orderBy('sort')
+            ->get()
+            ->filter->isLive()
+            ->values();
+        $guides = $service->priceGuides()->published()->with('services')->get()->filter->isLive()->values();
         $others = Service::query()->live()->whereKeyNot($service->id)->get();
         $url = route('services.show', $service);
 
@@ -62,7 +69,7 @@ class ServiceController extends Controller
             ->addNode($this->serviceNode($service, $url, $areas))
             ->fromModel($service);
 
-        return view('services.show', ['service' => $service, 'areas' => $areas, 'others' => $others]);
+        return view('services.show', ['service' => $service, 'areas' => $areas, 'others' => $others, 'guides' => $guides]);
     }
 
     /**

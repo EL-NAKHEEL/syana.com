@@ -1,6 +1,8 @@
 <?php
 
+use App\Seo\Sitemap\AreasSitemap;
 use App\Seo\Sitemap\PagesSitemap;
+use App\Seo\Sitemap\PricesSitemap;
 use App\Seo\Sitemap\ServicesSitemap;
 
 return [
@@ -52,6 +54,8 @@ return [
     'sitemaps' => [
         PagesSitemap::class,
         ServicesSitemap::class,
+        AreasSitemap::class,
+        PricesSitemap::class,
     ],
 
     'security' => [

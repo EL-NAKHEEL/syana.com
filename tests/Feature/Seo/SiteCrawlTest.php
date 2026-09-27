@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\PriceGuide;
 use App\Seo\Sitemap\SitemapGenerator;
 use Tests\Support\SiteCrawler;
 
@@ -18,7 +19,15 @@ function crawlSite(object $test): SiteCrawler
 
 beforeEach(function () {
     publishCorePages();
-    publishServices();
+    $services = publishServices();
+    publishAreas(3, $services);
+
+    $services[0]->update(['starting_price' => 400]);
+    $guide = PriceGuide::query()->create([
+        'slug' => 'ac-maintenance-cost', 'title' => 'سعر صيانة التكييف {year}: الصيانة والتنظيف', 'h1' => 'سعر صيانة التكييف {year}',
+        'intro' => 'أسعار الصيانة من جدول أسعارنا الحالي.', 'is_published' => true,
+    ]);
+    $guide->services()->sync($services->pluck('id'));
 });
 
 it('reaches every published page with a 200 and no broken internal links', function () {

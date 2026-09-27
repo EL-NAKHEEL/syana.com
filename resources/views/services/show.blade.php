@@ -85,6 +85,9 @@
                     <p class="price-box__value price-box__value--note">{{ $service->price_note ?: 'السعر بعد المعاينة' }}</p>
                 @endif
                 <p>الفني بيقولك التكلفة بالظبط بعد المعاينة وقبل أي شغل.</p>
+                @foreach ($guides as $guide)
+                    <p><a class="price-box__link" href="{{ $guide->url() }}">{{ $guide->render($guide->h1) }}</a></p>
+                @endforeach
                 <x-call-button location="service_price" label="اسأل عن السعر" />
             </div>
         </div>

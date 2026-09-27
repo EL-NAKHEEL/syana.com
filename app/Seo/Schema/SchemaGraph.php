@@ -2,7 +2,9 @@
 
 namespace App\Seo\Schema;
 
+use App\Models\Area;
 use App\Settings\BusinessSettings;
+use App\Support\Navigation;
 use Carbon\CarbonInterface;
 use Spatie\SchemaOrg\BaseType;
 use Spatie\SchemaOrg\Schema;
@@ -183,14 +185,16 @@ class SchemaGraph
     }
 
     /**
-     * Published service areas (filled in P3 from the areas table). Empty until areas exist:
-     * no area is ever claimed without a published area page.
+     * Live service areas only: no area is ever claimed without a live area page.
      *
      * @return array<int, array<string, string>>
      */
     public function areaServed(): array
     {
-        return [];
+        return app(Navigation::class)->areas()
+            ->map(fn (Area $area) => ['@type' => 'Place', 'name' => $area->name_ar, 'url' => $area->url()])
+            ->values()
+            ->all();
     }
 
     /**

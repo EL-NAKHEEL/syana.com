@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AreaController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CspReportController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PriceGuideController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SitemapController;
@@ -17,6 +19,12 @@ Route::middleware('page-cache')->group(function () {
 
     Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/services/{slug}', [ServiceController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('services.show');
+
+    Route::get('/areas', [AreaController::class, 'index'])->name('areas.index');
+    Route::get('/areas/{slug}', [AreaController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('areas.show');
+
+    Route::get('/prices', [PriceGuideController::class, 'index'])->name('prices.index');
+    Route::get('/prices/{slug}', [PriceGuideController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('prices.show');
 });
 
 Route::post('/bookings', [BookingController::class, 'store'])

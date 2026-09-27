@@ -17,7 +17,7 @@ trait ResolvesPublicRecords
      * @template TModel of Model
      *
      * @param  class-string<TModel>  $class
-     * @param  array<int, string>  $with
+     * @param  array<int|string, string|\Closure>  $with
      * @param  \Closure(TModel): bool  $isLive
      * @param  \Closure(TModel): string  $url
      * @return TModel

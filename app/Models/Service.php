@@ -34,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $body
  * @property string|null $starting_price
  * @property string|null $price_note
+ * @property Carbon|null $price_changed_at
  * @property string|null $schema_service_type
  * @property bool $requires_24_7
  * @property string|null $image
@@ -50,9 +51,19 @@ class Service extends Model implements HasSeo
     /** @use HasFactory<ServiceFactory> */
     use AffectsPublicPages, BlocksUnconfirmedContent, HasFactory, HasSeoMeta, HasSlugHistory, Publishable, TracksContentModification;
 
+    protected static function booted(): void
+    {
+        static::saving(function (self $service): void {
+            if ($service->isDirty('starting_price')) {
+                $service->price_changed_at = now();
+            }
+        });
+    }
+
     protected function casts(): array
     {
         return [
+            'price_changed_at' => 'datetime',
             'included' => 'array',
             'warning_signs' => 'array',
             'process_steps' => 'array',
@@ -119,5 +130,13 @@ class Service extends Model implements HasSeo
     public function areas(): BelongsToMany
     {
         return $this->belongsToMany(Area::class)->withPivot('note');
+    }
+
+    /**
+     * @return BelongsToMany<PriceGuide, $this>
+     */
+    public function priceGuides(): BelongsToMany
+    {
+        return $this->belongsToMany(PriceGuide::class);
     }
 }
