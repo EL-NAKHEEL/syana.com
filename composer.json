@@ -1,0 +1,111 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "el-nakheel/alnakheel-cool",
+    "type": "project",
+    "description": "Al Nakheel Cool (\u0627\u0644\u0646\u062e\u064a\u0644 \u0643\u0648\u0648\u0644) \u2014 AC sales, installation and maintenance website.",
+    "keywords": [
+        "laravel",
+        "hvac",
+        "ecommerce"
+    ],
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "filament/filament": "^5.9",
+        "filament/spatie-laravel-media-library-plugin": "^5.9",
+        "filament/spatie-laravel-settings-plugin": "^5.9",
+        "intervention/image": "^4.3",
+        "khaled.alshamaa/ar-php": "^7.0",
+        "laravel/framework": "^13.17",
+        "laravel/tinker": "^3.0",
+        "mews/purifier": "^3.4",
+        "spatie/laravel-backup": "^10.3",
+        "spatie/laravel-honeypot": "^4.7",
+        "spatie/laravel-medialibrary": "^11.23",
+        "spatie/laravel-responsecache": "^8.4",
+        "spatie/laravel-settings": "^3.9",
+        "spatie/laravel-sitemap": "^8.2",
+        "spatie/laravel-sluggable": "^4.0",
+        "spatie/schema-org": "^5.0"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.12",
+        "laravel/pail": "^1.2.5",
+        "laravel/pao": "^1.0.6",
+        "laravel/pint": "^1.32",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.6",
+        "pestphp/pest": "^5.2",
+        "pestphp/pest-plugin-laravel": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "setup": [
+            "composer install",
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan key:generate",
+            "@php artisan migrate --force",
+            "npm install --ignore-scripts",
+            "npm run build"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php artisan dev"
+        ],
+        "test": [
+            "@php artisan config:clear --ansi @no_additional_args",
+            "@php artisan test"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan migrate --graceful --ansi"
+        ],
+        "pre-package-uninstall": [
+            "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+        ],
+        "lint": [
+            "pint --test",
+            "phpstan analyse --memory-limit=1G"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
