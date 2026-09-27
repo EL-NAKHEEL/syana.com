@@ -1,8 +1,10 @@
 <?php
 
 use App\Seo\Sitemap\AreasSitemap;
+use App\Seo\Sitemap\FacetsSitemap;
 use App\Seo\Sitemap\PagesSitemap;
 use App\Seo\Sitemap\PricesSitemap;
+use App\Seo\Sitemap\ProductsSitemap;
 use App\Seo\Sitemap\ServicesSitemap;
 
 return [
@@ -43,7 +45,7 @@ return [
         // Facets are indexable only with at least this many live products.
         'facet_min_products' => 3,
         // Query parameters that make a URL a filtered/sorted variant (noindex, no canonical).
-        'filter_params' => ['brand', 'hp', 'type', 'cooling', 'inverter', 'price_min', 'price_max', 'sort', 'rating', 'service', 'area'],
+        'filter_params' => ['brand', 'hp', 'type', 'cooling', 'inverter', 'price_min', 'price_max', 'sort', 'rating', 'service', 'area', 'room', 'sun', 'top', 'q'],
         // Query parameters that never change content (canonical drops them).
         'tracking_params' => ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'msclkid', 'ttclid'],
     ],
@@ -56,6 +58,8 @@ return [
         ServicesSitemap::class,
         AreasSitemap::class,
         PricesSitemap::class,
+        ProductsSitemap::class,
+        FacetsSitemap::class,
     ],
 
     'security' => [

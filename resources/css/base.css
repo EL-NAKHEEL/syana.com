@@ -155,3 +155,8 @@ ol {
 .prose li + li {
     margin-block-start: 0.5rem;
 }
+
+/* Component display rules must never override the hidden attribute (e.g. the cart badge). */
+[hidden] {
+    display: none !important;
+}

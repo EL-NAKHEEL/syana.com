@@ -1,0 +1,479 @@
+/* ---------- Store layout ---------- */
+.store-layout {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+}
+
+@media (min-width: 62rem) {
+    .store-layout {
+        grid-template-columns: 280px 1fr;
+    }
+}
+
+/* ---------- Filters (GET form; a collapsible sheet on mobile) ---------- */
+.filters {
+    background: var(--light);
+}
+
+.filters__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: var(--tap);
+    padding: 0.75rem 1.25rem;
+    background: var(--dark);
+    color: var(--white);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+}
+
+.filters__toggle::-webkit-details-marker {
+    display: none;
+}
+
+.filters__toggle::after {
+    content: '+';
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.filters[open] .filters__toggle::after {
+    content: '−';
+}
+
+@media (min-width: 62rem) {
+    .filters__toggle {
+        pointer-events: none;
+    }
+
+    .filters__toggle::after {
+        display: none;
+    }
+}
+
+.filters__form {
+    display: grid;
+    gap: 1.25rem;
+    padding: 1.25rem;
+}
+
+.filters__group {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.filters__group legend,
+.filters__group > label {
+    margin-block-end: 0.35rem;
+    color: var(--dark);
+    font-family: var(--font-heading);
+    font-weight: 600;
+}
+
+.filters__check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-block-size: 36px;
+    cursor: pointer;
+}
+
+.filters__check input {
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    accent-color: var(--primary);
+}
+
+.filters select,
+.filters input[type='number'] {
+    inline-size: 100%;
+    min-block-size: var(--tap);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ced4da;
+    background: var(--white);
+    font: inherit;
+}
+
+.filters__price {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.filters__price legend {
+    grid-column: 1 / -1;
+}
+
+.js [data-filter-submit] {
+    display: none;
+}
+
+/* ---------- Results ---------- */
+.results__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-block-end: 1.5rem;
+}
+
+.results__count {
+    margin: 0;
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.results.is-loading {
+    opacity: 0.55;
+    transition: opacity 0.2s;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.chips a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 36px;
+    padding: 0.25rem 0.875rem;
+    border-radius: 999px;
+    background: var(--dark);
+    color: var(--white);
+    font-size: 0.95rem;
+}
+
+.chips a:hover {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.product-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    box-shadow: var(--shadow);
+}
+
+.product-card__media {
+    display: block;
+    aspect-ratio: 1;
+    padding: 1rem;
+    background: var(--white);
+}
+
+.product-card__media img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
+}
+
+.product-card__body {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1rem 1.25rem 1.25rem;
+    border-block-start: 3px solid var(--primary);
+}
+
+.product-card__body p {
+    margin: 0;
+}
+
+.product-card__brand {
+    color: var(--primary-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.product-card__title {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.product-card__title a {
+    color: var(--dark);
+}
+
+.product-card__title a:hover {
+    color: var(--primary-text);
+}
+
+.product-card__model {
+    font-size: 0.9rem;
+}
+
+.product-card__price strong {
+    color: var(--dark);
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+}
+
+.product-card__price del,
+.product__price del,
+.price-table del {
+    margin-inline-start: 0.5rem;
+    color: var(--secondary);
+}
+
+.product-card__stock,
+.product__stock {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.product-card__stock.is-out,
+.product__stock.is-out {
+    color: #b42318;
+}
+
+.results__empty {
+    padding: 2rem;
+    background: var(--light);
+}
+
+/* ---------- Pagination ---------- */
+.pagination ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pagination a,
+.pagination span {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    min-inline-size: var(--tap);
+    justify-content: center;
+    padding: 0 0.875rem;
+    background: var(--light);
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.pagination [aria-current='page'] {
+    background: var(--primary);
+    color: var(--white);
+}
+
+/* ---------- Facet links ---------- */
+.facet-links {
+    display: grid;
+    gap: 2rem;
+}
+
+.facet-links h2 {
+    font-size: var(--fs-h5);
+}
+
+/* ---------- Product page ---------- */
+.breadcrumbs--light a,
+.breadcrumbs--light span {
+    color: var(--secondary);
+}
+
+.breadcrumbs--light li:not(:last-child)::after {
+    color: var(--secondary);
+}
+
+.product h1 {
+    font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.4rem);
+}
+
+.product__gallery {
+    padding: 2rem;
+    background: var(--white);
+    box-shadow: var(--shadow);
+}
+
+.product__gallery img {
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 1;
+    object-fit: contain;
+}
+
+.product__price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-block: 1rem;
+}
+
+.product__price strong {
+    color: var(--primary-text);
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
+}
+
+.product__sale-ends {
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.product__buy {
+    display: flex;
+    gap: 0.75rem;
+    margin-block: 1.5rem 1rem;
+}
+
+.product__buy input {
+    inline-size: 5rem;
+    min-block-size: var(--tap);
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    font: inherit;
+    text-align: center;
+}
+
+.spec-table th {
+    inline-size: 35%;
+    background: var(--light);
+    color: var(--dark);
+}
+
+/* ---------- Cart & checkout ---------- */
+.cart-table td,
+.cart-table th {
+    vertical-align: middle;
+}
+
+.cart-table input {
+    inline-size: 4.5rem;
+    min-block-size: var(--tap);
+    padding: 0.35rem;
+    border: 1px solid #ced4da;
+    font: inherit;
+    text-align: center;
+}
+
+.cart-summary {
+    display: grid;
+    gap: 0.5rem;
+    padding: 2rem;
+    background: var(--light);
+}
+
+.cart-summary p {
+    margin: 0;
+}
+
+.cart-summary__total {
+    color: var(--dark);
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.navbar__cart {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-inline-end: 1rem;
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.navbar__cart svg {
+    inline-size: 24px;
+    block-size: 24px;
+}
+
+.navbar__cart-count {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 1.4rem;
+    block-size: 1.4rem;
+    padding-inline: 0.25rem;
+    border-radius: 999px;
+    background: var(--primary);
+    color: var(--white);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.notice {
+    padding: 1rem 1.25rem;
+    border-inline-start: 4px solid var(--success);
+    background: #ecfdf3;
+    color: #05603a;
+}
+
+.checkout {
+    align-items: start;
+}
+
+.search-form {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.search-form input {
+    flex: 1;
+}
+
+.calculator {
+    margin-block-end: 2rem;
+    padding: 2rem;
+    background: var(--dark);
+    color: var(--footer-text);
+}
+
+.calculator h2 {
+    color: var(--white);
+    font-size: var(--fs-h3);
+}
+
+.calculator__form {
+    display: grid;
+    gap: 0.75rem;
+    max-inline-size: 28rem;
+}
+
+.calculator__form label {
+    color: var(--white);
+}
+
+.calculator__form input[type='number'] {
+    min-block-size: var(--tap);
+    padding: 0.5rem 0.75rem;
+    border: 0;
+    font: inherit;
+}
+
+.calculator__result {
+    margin: 1.5rem 0 0;
+    color: var(--white);
+    font-size: 1.15rem;
+}
+
+.calculator__result a {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: underline;
+}

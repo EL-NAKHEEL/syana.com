@@ -28,6 +28,7 @@ IMAGES = {
     "apartment-building-facade": ("wall-city-estate-background-office.jpg", [130, 260], 1),
     "indoor-ac-cleaning-square": ("full-shot-mean-cleaning-air.jpg", [130, 260], 1),
     "outdoor-unit-installation-square": ("technician-working-air-conditioner.jpg", [130, 260], 1),
+    "ac-units-square": ("2306.q891.030.S.m004.c10.air conditioner split system realistic.jpg", [240, 480], 1),
     "technician-on-ladder-square": ("hvac-technician-working-capacitor-part-condensing-unit.jpg", [130, 260], 1),
 }
 

@@ -26,6 +26,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append([SecurityHeaders::class, NoindexOutsideProduction::class, LogNotFound::class]);
 
         $middleware->preventRequestForgery(except: ['csp-report']);
+        // Read by JS on cached pages to show the cart badge (holds a number only).
+        $middleware->encryptCookies(except: ['cart_count']);
 
         $middleware->alias([
             'page-cache' => CacheResponse::class,

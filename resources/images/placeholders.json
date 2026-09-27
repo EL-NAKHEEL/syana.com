@@ -91,6 +91,14 @@
     "ratio": 1.0,
     "placeholder": true
   },
+  "ac-units-square": {
+    "widths": [
+      240,
+      480
+    ],
+    "ratio": 1.0,
+    "placeholder": true
+  },
   "technician-on-ladder-square": {
     "widths": [
       130,

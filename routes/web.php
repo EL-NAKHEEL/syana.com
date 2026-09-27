@@ -2,12 +2,16 @@
 
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CspReportController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PriceGuideController;
 use App\Http\Controllers\RobotsController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ThankYouController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Honeypot\ProtectAgainstSpam;
@@ -25,6 +29,25 @@ Route::middleware('page-cache')->group(function () {
 
     Route::get('/prices', [PriceGuideController::class, 'index'])->name('prices.index');
     Route::get('/prices/{slug}', [PriceGuideController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('prices.show');
+
+    // Curated facets are registered before the product catch-all (PLAN.md §4).
+    Route::get('/store', [StoreController::class, 'index'])->name('store.index');
+    Route::get('/store/brand/{brand}/{hp}', [StoreController::class, 'brandCapacity'])->where(['brand' => '[a-z0-9-]+', 'hp' => '[0-9]+(-[0-9]+)?-hp'])->name('store.brand-capacity');
+    Route::get('/store/brand/{brand}', [StoreController::class, 'brand'])->where('brand', '[a-z0-9-]+')->name('store.brand');
+    Route::get('/store/capacity/{hp}', [StoreController::class, 'capacity'])->where('hp', '[0-9]+(-[0-9]+)?-hp')->name('store.capacity');
+    Route::get('/store/type/{type}', [StoreController::class, 'type'])->where('type', '[a-z-]+')->name('store.type');
+    Route::get('/store/{slug}', [StoreController::class, 'product'])->where('slug', '[a-z0-9-]+')->name('store.product');
+});
+
+// Personal, never cached, noindex (and disallowed in robots.txt).
+Route::middleware('no-page-cache')->group(function () {
+    Route::get('/cart', [CartController::class, 'show'])->name('cart');
+    Route::post('/cart/items', [CartController::class, 'add'])->middleware('throttle:30,1')->name('cart.add');
+    Route::patch('/cart/items/{product}', [CartController::class, 'update'])->whereNumber('product')->name('cart.update');
+    Route::delete('/cart/items/{product}', [CartController::class, 'remove'])->whereNumber('product')->name('cart.remove');
+    Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('throttle:5,1')->name('checkout.store');
+    Route::get('/search', SearchController::class)->name('search');
 });
 
 Route::post('/bookings', [BookingController::class, 'store'])

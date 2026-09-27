@@ -28,6 +28,8 @@ beforeEach(function () {
         'intro' => 'أسعار الصيانة من جدول أسعارنا الحالي.', 'is_published' => true,
     ]);
     $guide->services()->sync($services->pluck('id'));
+
+    publishCatalog(3);
 });
 
 it('reaches every published page with a 200 and no broken internal links', function () {
@@ -79,10 +81,21 @@ it('gives every page a unique title and description within length limits', funct
 });
 
 it('uses a self-referencing absolute canonical and index robots on indexable pages', function () {
+    // Intended noindex pages reachable by links: personal pages (also disallowed in robots.txt) and curated facets
+    // that do not meet the indexing rule yet (no published intro or < 3 live products).
+    $mayBeNoindex = fn (string $url) => in_array($url, [url('/cart'), url('/checkout'), url('/search')], true)
+        || preg_match('#^'.preg_quote(url('/store'), '#').'/(brand|capacity|type)/#', $url);
+
     foreach (crawlSite($this)->pages as $url => $response) {
         $doc = html((string) $response->getContent());
         $robots = $doc->querySelector('meta[name="robots"]')?->getAttribute('content');
         $canonical = $doc->querySelector('link[rel="canonical"]')?->getAttribute('href');
+
+        if ($robots === 'noindex, follow' && $mayBeNoindex($url)) {
+            expect($robots)->toBe('noindex, follow', $url)->and($canonical)->toBeNull();
+
+            continue;
+        }
 
         expect($robots)->toBe('index, follow', $url)
             ->and($canonical)->toBe($url)

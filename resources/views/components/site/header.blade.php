@@ -31,6 +31,9 @@
                 <li><a href="{{ $item['url'] }}" @if (request()->routeIs($item['route'])) aria-current="page" @endif>{{ $item['label'] }}</a></li>
             @endforeach
         </ul>
+        @if (Route::has('cart'))
+            <a class="navbar__cart" href="{{ route('cart') }}" data-cart-link hidden><x-icon.cart /> السلة <span class="navbar__cart-count" data-cart-count>0</span></a>
+        @endif
         <x-whatsapp-button class="navbar__cta" variant="primary" location="navbar" label="احصل على عرض أسعار" message="السلام عليكم، عايز عرض سعر" />
     </nav>
 </header>

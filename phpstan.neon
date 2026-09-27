@@ -18,4 +18,6 @@ parameters:
         # so these two settings arrays must stay untyped (see comments in the class).
         -
             identifier: missingType.iterableValue
-            path: app/Settings/BusinessSettings.php
+            paths:
+                - app/Settings/BusinessSettings.php
+                - app/Settings/CalculatorSettings.php

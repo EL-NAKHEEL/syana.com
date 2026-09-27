@@ -48,7 +48,12 @@ export function initAnalytics() {
     }
 
     // Conversion pages (thank-you) fire their event once on load.
-    document.querySelectorAll('[data-track-onload]').forEach((el) => track(el.dataset.trackOnload));
+    document.querySelectorAll('[data-track-onload]').forEach((el) => {
+        const params = {};
+        if (el.dataset.trackValue) Object.assign(params, { value: Number(el.dataset.trackValue), currency: 'EGP' });
+        if (el.dataset.trackTransaction) params.transaction_id = el.dataset.trackTransaction;
+        track(el.dataset.trackOnload, params);
+    });
 
     document.addEventListener('click', (event) => {
         const el = event.target.closest('[data-track]');

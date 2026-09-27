@@ -18,6 +18,7 @@ class ThankYouController extends Controller
             ->noindex()
             ->breadcrumbs([['name' => 'شكرًا', 'url' => route('thank-you')]]);
 
-        return view('pages.thank-you', ['type' => $type]);
+        // Order details come from the flashed session only (never from the URL).
+        return view('pages.thank-you', ['type' => $type, 'order' => $type === 'order' ? $request->session()->get('order') : null]);
     }
 }

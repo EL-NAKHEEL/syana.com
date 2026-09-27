@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Models\Area;
 use App\Models\Page;
 use App\Models\PriceGuide;
+use App\Models\Product;
 use App\Models\Service;
 use App\Settings\BusinessSettings;
 use Illuminate\Support\Collection;
@@ -28,6 +29,7 @@ class Navigation
     {
         return $this->filter([
             ['label' => 'الرئيسية', 'route' => 'home'],
+            ['label' => 'المتجر', 'route' => 'store.index', 'when' => fn () => $this->memo['store'] ??= Product::query()->live()->exists()],
             ['label' => 'خدماتنا', 'route' => 'services.index', 'when' => fn () => $this->services()->isNotEmpty()],
             ['label' => 'الأسعار', 'route' => 'prices.index', 'when' => fn () => $this->hasLivePriceGuides()],
             ['label' => 'مناطق الخدمة', 'route' => 'areas.index', 'when' => fn () => $this->areas()->isNotEmpty()],

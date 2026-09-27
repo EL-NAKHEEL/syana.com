@@ -1,7 +1,10 @@
 <?php
 
 use App\Models\Area;
+use App\Models\Brand;
+use App\Models\FacetPage;
 use App\Models\Page;
+use App\Models\Product;
 use App\Models\Service;
 use Dom\HTMLDocument;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -88,6 +91,33 @@ function publishAreas(int $count = 3, ?Collection $services = null): Collection
     }
 
     return $areas->map->fresh();
+}
+
+/**
+ * A published brand with live products and published facet intros for the brand and 1.5 HP.
+ *
+ * @return array{brand: Brand, products: Collection<int, Product>}
+ */
+function publishCatalog(int $products = 3): array
+{
+    $brand = Brand::factory()->published()->create(['slug' => 'sharp', 'name_ar' => 'شارب', 'name_en' => 'Sharp']);
+
+    $items = collect(range(1, $products))->map(fn (int $i) => Product::factory()->published()->create([
+        'brand_id' => $brand->id,
+        'slug' => 'sharp-ah-'.$i,
+        'name' => 'Sharp AH-'.$i,
+        'model_number' => 'AH-A1'.$i,
+        'price' => 20000 + $i * 1000,
+    ]));
+
+    foreach ([['kind' => 'brand', 'brand_id' => $brand->id], ['kind' => 'capacity', 'hp' => 1.5]] as $facet) {
+        FacetPage::query()->create($facet + [
+            'intro' => 'مقدمة فريدة لصفحة '.$facet['kind'].' مكتوبة للزوار.',
+            'is_published' => true,
+        ]);
+    }
+
+    return ['brand' => $brand, 'products' => $items];
 }
 
 function html(string $markup): HTMLDocument
