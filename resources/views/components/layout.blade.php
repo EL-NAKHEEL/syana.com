@@ -17,8 +17,7 @@
     @if ($canonical)
         <link rel="canonical" href="{{ $canonical }}">
     @endif
-    <link rel="preload" href="{{ Vite::asset('resources/fonts/web/changa-800.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ Vite::asset('resources/fonts/web/plex-arabic-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ Vite::asset('resources/fonts/web/rubik-700.woff2') }}" as="font" type="font/woff2" crossorigin>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>{!! \App\Support\InlineScripts::HEAD !!}</script>
 
@@ -43,15 +42,25 @@
     @if ($seoSettings->bing_site_verification)
         <meta name="msvalidate.01" content="{{ $seoSettings->bing_site_verification }}">
     @endif
+    {{-- Tracking only runs in production so staging/local visits never count as Ads conversions. --}}
+    @production
     @if ($analytics->gtm_container_id)
         <meta name="nk-gtm" content="{{ $analytics->gtm_container_id }}">
-    @elseif ($analytics->ga4_measurement_id)
+    @endif
+    @if ($analytics->ga4_measurement_id)
         <meta name="nk-ga4" content="{{ $analytics->ga4_measurement_id }}">
     @endif
+    @if ($analytics->google_ads_id)
+        <meta name="nk-ads" content="{{ $analytics->google_ads_id }}">
+        @if ($analytics->google_ads_call_label)
+            <meta name="nk-ads-call" content="{{ $analytics->google_ads_id }}/{{ $analytics->google_ads_call_label }}">
+        @endif
+    @endif
+    @endproduction
 
-    <meta name="theme-color" content="#E73F1E">
-    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+    <meta name="theme-color" content="#02245B">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="32x32">
+    <link rel="icon" href="{{ asset('images/icon-192.png') }}" type="image/png" sizes="192x192">
     <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
 
     <script type="application/ld+json">{!! $seo->jsonLd() !!}</script>
@@ -62,11 +71,9 @@
         <div class="draft-banner" role="status">مسودة غير منشورة — معاينة للإدارة فقط</div>
     @endif
     <x-site.header />
-    <x-breadcrumbs :items="$seo->breadcrumbItems()" />
     <main id="main">
         {{ $slot }}
     </main>
     <x-site.footer />
-    <x-site.action-bar />
 </body>
 </html>

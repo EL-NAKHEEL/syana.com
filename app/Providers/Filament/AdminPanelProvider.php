@@ -32,12 +32,10 @@ class AdminPanelProvider extends PanelProvider
                 AppAuthentication::make()->recoverable(),
             ], isRequired: true)
             ->brandName(config('site.brand.name'))
-            ->brandLogo(asset('favicon.svg'))
-            ->favicon(asset('favicon.svg'))
+            ->favicon(asset('favicon.ico'))
             ->colors([
-                'primary' => '#FB6C00',
-                'danger' => '#E73F1E',
-                'warning' => '#F9B637',
+                'primary' => '#FF5E14',
+                'gray' => '#5F656F',
             ])
             ->navigationGroups(['المحتوى', 'SEO', 'الإعدادات'])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')

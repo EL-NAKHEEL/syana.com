@@ -2,6 +2,7 @@
 
 use App\Models\Page;
 use App\Models\User;
+use Database\Seeders\LegacyContentSeeder;
 
 function enrolledAdmin(): User
 {
@@ -12,7 +13,7 @@ function enrolledAdmin(): User
 }
 
 it('renders every admin screen for an admin with MFA enrolled', function (string $path) {
-    $this->seed(Database\Seeders\LegacyContentSeeder::class);
+    $this->seed(LegacyContentSeeder::class);
 
     $this->actingAs(enrolledAdmin())->get($path)->assertOk();
 })->with([
@@ -27,7 +28,7 @@ it('renders every admin screen for an admin with MFA enrolled', function (string
 ]);
 
 it('opens the page editor with the SEO panel', function () {
-    $this->seed(Database\Seeders\LegacyContentSeeder::class);
+    $this->seed(LegacyContentSeeder::class);
     $page = Page::query()->where('slug', 'home')->first();
 
     $this->actingAs(enrolledAdmin())

@@ -1,38 +1,43 @@
-@php($navigation = app(\App\Support\Navigation::class))
-@php($email = app(\App\Settings\BusinessSettings::class)->publicEmail())
-<footer class="site-footer on-dark">
-    <x-louver variant="reverse" />
-    <div class="container site-footer__grid">
-        <section aria-labelledby="footer-brand">
-            <h2 id="footer-brand">{{ config('site.brand.name') }}</h2>
-            <p>بيع وتركيب وصيانة وتأسيس التكييفات للبيوت والشركات.</p>
-            <x-call-button variant="primary" location="footer" />
+@php
+    $navigation = app(\App\Support\Navigation::class);
+    $business = app(\App\Settings\BusinessSettings::class);
+    $email = $business->publicEmail();
+@endphp
+<footer class="footer">
+    <div class="container footer__grid">
+        <section aria-labelledby="footer-contact">
+            <h2 id="footer-contact">تواصل معنا</h2>
+            <p><a href="tel:{{ config('site.phone.e164') }}" data-track="click_call" data-track-location="footer">تليفون: <span class="ltr">{{ config('site.phone.display') }}</span></a></p>
+            <p><a href="https://wa.me/{{ config('site.phone.whatsapp') }}" data-track="click_whatsapp" data-track-location="footer" rel="noopener">واتساب: <span class="ltr">{{ config('site.phone.display') }}</span></a></p>
+            @if ($email)
+                <p><a href="mailto:{{ $email }}">{{ $email }}</a></p>
+            @endif
+            @if ($review = $navigation->reviewUrl())
+                <p><a href="{{ $review }}" rel="noopener">قيّمنا على جوجل</a></p>
+            @endif
         </section>
 
         <section aria-labelledby="footer-links">
-            <h2 id="footer-links">روابط</h2>
-            <ul>
+            <h2 id="footer-links">روابط سريعة</h2>
+            <ul class="footer__links">
                 @foreach ($navigation->footer() as $item)
                     <li><a href="{{ $item['url'] }}">{{ $item['label'] }}</a></li>
                 @endforeach
             </ul>
         </section>
 
-        <section aria-labelledby="footer-contact">
-            <h2 id="footer-contact">تواصل</h2>
-            <ul>
-                <li><a href="tel:{{ config('site.phone.e164') }}" data-track="click_call" data-track-location="footer">تليفون: <span class="ltr">{{ config('site.phone.display') }}</span></a></li>
-                <li><a href="https://wa.me/{{ config('site.phone.whatsapp') }}" data-track="click_whatsapp" data-track-location="footer" rel="noopener">واتساب: <span class="ltr">{{ config('site.phone.display') }}</span></a></li>
-                @if ($email)
-                    <li><a href="mailto:{{ $email }}">{{ $email }}</a></li>
-                @endif
-                @if ($review = $navigation->reviewUrl())
-                    <li><a href="{{ $review }}" rel="noopener">قيّمنا على جوجل</a></li>
-                @endif
-            </ul>
+        <section aria-labelledby="footer-about">
+            <h2 id="footer-about">{{ config('site.brand.name') }}</h2>
+            <p>بيع وتركيب وصيانة وتأسيس التكييفات للبيوت والشركات.</p>
         </section>
     </div>
-    <div class="container site-footer__legal">
-        <p>© {{ now()->year }} {{ config('site.brand.name') }}. جميع الحقوق محفوظة.</p>
+    <div class="footer__copyright">
+        <div class="container">
+            <p>حقوق النشر © {{ now()->year }} {{ config('site.brand.name') }}، جميع الحقوق محفوظة.</p>
+        </div>
     </div>
 </footer>
+
+{{-- Floating call / WhatsApp buttons, as on the existing site. --}}
+<a class="float-btn float-btn--whatsapp" href="https://wa.me/{{ config('site.phone.whatsapp') }}" aria-label="راسلنا على واتساب" data-track="click_whatsapp" data-track-location="float" rel="noopener"><x-icon.whatsapp /></a>
+<a class="float-btn float-btn--call" href="tel:{{ config('site.phone.e164') }}" aria-label="اتصل بنا {{ config('site.phone.display') }}" data-track="click_call" data-track-location="float"><x-icon.phone /></a>

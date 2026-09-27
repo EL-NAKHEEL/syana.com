@@ -1,6 +1,6 @@
 @props(['items'])
 @if (count($items) > 1)
-    <nav class="breadcrumbs container" aria-label="مسار الصفحة">
+    <nav class="breadcrumbs" aria-label="مسار الصفحة">
         <ol>
             @foreach ($items as $item)
                 <li>

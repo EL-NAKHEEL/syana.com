@@ -27,11 +27,13 @@ Blank answers keep the default in §12 and stay `[TODO]`. Nothing unconfirmed is
 | Q12–Q14 | Areas, E-E-A-T facts, starting prices `[TODO]`; services show «السعر بعد المعاينة». |
 | Q15 | Simplified MSA for titles, meta, H1s and specs; light Egyptian colloquial for CTAs, the hero slogan and friendly body copy. |
 | Q16 | Filament database notifications + email to `[TODO]` (`MAIL_*` / `NOTIFY_EMAIL` in `.env`). |
+| Q18 | The existing site sends every visitor's IP to a Google Sheet (Apps Script + ipify). Keep it? It adds third-party requests and needs a privacy notice; Google Ads click-fraud tools or server logs are better options | Not carried over |
 | Q17 | Calculator coefficients are configurable defaults flagged `[TODO confirm]`. |
 | C1 | Area publish guard: approved local reviews **optional** (threshold 0); all other fields required. **Hubs** (areas, projects, reviews, blog) are `noindex, follow` and out of the sitemap until they have **≥ 3 published items**. |
 | C2 | Facet pages show a compact **live price table** above the grid (model, HP, type, price, sale price) with «آخر تحديث»; keyword map adds the colloquial plurals «تكييف 3 حصنة / 4 حصنة / 5 حصنة». |
 | C3 | Old image redirects list **exact old file paths** only — no `/img/*` wildcard. |
 | C4 | Home has one H1 holding slogan + keyword line: `<h1><span>خلّي الحرّ برّه.</span> <span>بيع وتركيب وصيانة التكييفات في مصر</span></h1>`. |
+| C6 (2026-09-28) | **Design = the existing site's look** (owner: «الموقع معمول»), not the §7 spec: navy `#02245B` / orange `#FF5E14`, grey body `#5F656F`, Rubik/Open Sans (Latin) + the platform Arabic font, top bar with angled orange phone block, angled orange brand block, photo hero with navy gradient (first carousel slide, static), photo page headers with breadcrumbs, «من نحن» photo pair + checklist, feature list with orange icon circles, service cards with floating square photos, navy footer, floating WhatsApp/call buttons. Rebuilt without Bootstrap/jQuery. Filler (stats band, fake testimonials, 24/7, newsletter) stays out until confirmed. The old stock photos are reused as **temporary** optimized placeholders (TODO.md). Google Ads call conversion (`AW-11415013969`) carried over. |
 | C5 | Security (§6.9): Filament MFA required for every admin, login throttling, security headers (HSTS once HTTPS is live, CSP report-only first, `X-Content-Type-Options`, `Referrer-Policy`, …), spatie/laravel-backup on by default (daily DB + media to an off-server disk from `.env`). |
 
 ---
@@ -400,26 +402,24 @@ Posts are written only with facts we can support (manufacturer manuals for error
 
 ---
 
-## 8. Design system (spec §7, until/unless `./design` arrives [Q1])
+## 8. Design system (C6: the existing site is the visual source of truth)
 
-- Tokens as CSS custom properties: `--t45 #E73F1E`, `--t38 #FB6C00`, `--t30 #F9B637`, `--t24 #FFDD9C`, `--ink #1F120C`,
-  `--paper #FFF6E8` + spacing/radius/shadow scales; logical properties only (`margin-inline-start`, `inset-inline-end`…).
-  Contrast rules enforced by a unit test over token pairs (text on `--t38/--t30` = `--ink`; `--t45` large text only).
-- Fonts (self-hosted woff2, `font-display: swap`): Changa 700/800 (headings), IBM Plex Sans Arabic 400/500/600,
-  Handjet subset to `0-9 ° . , % -` for LCD digits. Subsetting via `pyftsubset` script (Arabic + Latin basic + digits).
-  Preload only Changa 800 + Plex 400. Western digits everywhere. No `letter-spacing` on Arabic (lint rule in CSS test).
-- Blade components (P1 unless noted): `layout`, `header` (louver top bar, logo: date palm over 4 stripes, SVG),
-  `nav`, `breadcrumbs`, `footer`, `mobile-action-bar` (اتصل / واتساب / السلة), `louver-divider`, `lcd` (number panel),
-  `button`, `stamp`, `coupon`, `card-*`, `faq` (`<details>`), `nap`, `cta-band`, `booking-form` (P3), `picture`
-  (AVIF/WebP srcset, width/height, lazy/eager+fetchpriority), `split-flap-board` (P3, whole-row flip, CSS only),
-  `remote-filter-panel` (P2, bottom sheet on mobile), `product-card` (P2), `calculator` (P2), `review-card` (P4),
-  `map-facade`, `youtube-facade`.
-- Homepage “cools from 45° to 24°” = section backgrounds stepping through `--t45 → --t24` with a sticky LCD readout
-  (decorative, `aria-hidden`); scroll-driven animation in CSS (`animation-timeline: view()`) with static fallback.
-- Louver intro: CSS only, ≤ 600 ms, once per session (sessionStorage flag set by a 300-byte inline script),
-  disabled under `prefers-reduced-motion`; animates `transform`/`clip-path` of an overlay — the H1 is painted from first
-  frame, never `opacity: 0`. Heat haze (SVG filter) only at `(min-width: 1024px) and (hover: hover)`.
-- Accessibility: WCAG 2.2 AA, visible `:focus-visible`, 44×44 targets, decorative elements `aria-hidden`, skip link.
+- Source: `legacy/old-site/` (its `css/style.css` values). If a Claude Design export later lands in `./design`,
+  re-skin tokens first, then components.
+- Tokens (`resources/css/tokens.css`): `--primary #FF5E14`, `--primary-text #D14400` (small orange text, AA),
+  `--secondary #5F656F` (body), `--light #F5F5F5`, `--dark #02245B` (headings, top bar, footer), `--success #198754`
+  (call buttons), WhatsApp `#25D366`, call `#007BFF`. Logical CSS properties only.
+- Type: Rubik 500/700 (headings) and Open Sans 400/600 (body) self-hosted as Latin/digit subsets; Arabic uses the
+  platform Arabic font exactly as the existing site does (zero Arabic font bytes). No letter-spacing on Arabic.
+- Components: top bar, navbar with angled brand block + «احصل على عرض أسعار», hero (photo + navy gradient, one H1 per
+  C4, label, green call button), page header (photo + gradient, H1, breadcrumbs), eyebrow + heading, about photo pair
+  + check list + optional experience box (only when the founding year is set), feature list, service cards, process
+  steps (navy), FAQ (`<details>`), contact band, footer, floating WhatsApp/call buttons, `<x-picture>` (AVIF/WebP/JPEG
+  srcset, width/height, lazy, LCP eager + fetchpriority).
+- Accessibility adjustments that keep the look: white-on-orange buttons use bold ≥ 1.2rem labels (AA large text),
+  small orange text uses `--primary-text`, visible focus rings, 44px targets, icon buttons have Arabic labels.
+- Not carried over: the carousel (static first slide instead: faster LCP, one H1), Bootstrap/jQuery/WOW/Owl, the
+  spinner, stats counters and testimonials (until real), the newsletter form, the visitor-IP tracker (see §12 Q18).
 
 ---
 
@@ -510,4 +510,5 @@ everything `is_published=false`) and `LegacyContentSeeder` (migrated copy, unpub
 | Q14 | Starting prices for services (maintenance visit, cleaning, freon, installation, preparation per meter)? | Show “السعر بعد المعاينة” until provided |
 | Q15 | Copy tone: simplified MSA for headings/meta with light Egyptian colloquial in body and CTAs (like the old service pages)? | Yes |
 | Q16 | Where should order/booking notifications go (email address, WhatsApp number)? SMTP provider? | Filament database notifications + `MAIL_*` from `.env` |
+| Q18 | The existing site sends every visitor's IP to a Google Sheet (Apps Script + ipify). Keep it? It adds third-party requests and needs a privacy notice; Google Ads click-fraud tools or server logs are better options | Not carried over |
 | Q17 | Calculator coefficients (BTU per m², sun and top-floor multipliers): do your technicians use a rule of thumb? | Configurable defaults flagged `[TODO confirm]` |

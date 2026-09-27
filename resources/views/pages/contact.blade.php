@@ -4,29 +4,30 @@
     $email = $business->publicEmail();
 @endphp
 <x-layout class="page-contact">
-    <header class="page-head">
-        <div class="container">
-            <h1>{{ $page->title }}</h1>
-            @if ($page->intro)
-                <p>{{ Copy::text($page->intro) }}</p>
-            @endif
-        </div>
-    </header>
+    <x-page-header :title="$page->title" :intro="$page->intro" />
 
-    <section class="section section--paper" aria-labelledby="contact-ways">
+    <section class="section" aria-labelledby="contact-ways">
         <div class="container">
-            <h2 id="contact-ways">طرق التواصل</h2>
+            <div class="section-title--center">
+                <span class="eyebrow">تواصل معنا</span>
+                <h2 id="contact-ways">طرق التواصل</h2>
+            </div>
             <ul class="nap">
                 <li>
-                    <span class="nap__label">اتصال</span>
-                    <a class="nap__value" href="tel:{{ config('site.phone.e164') }}" data-track="click_call" data-track-location="contact"><span class="ltr">{{ config('site.phone.display') }}</span></a>
+                    <span class="icon-circle"><x-icon.phone /></span>
+                    <span class="nap__label">رقم الهاتف</span>
+                    <span class="nap__value ltr">{{ config('site.phone.display') }}</span>
+                    <x-call-button location="contact" label="اتصل الآن" />
                 </li>
                 <li>
-                    <span class="nap__label">واتساب</span>
-                    <a class="nap__value" href="https://wa.me/{{ config('site.phone.whatsapp') }}" data-track="click_whatsapp" data-track-location="contact" rel="noopener"><span class="ltr">{{ config('site.phone.display') }}</span></a>
+                    <span class="icon-circle"><x-icon.whatsapp /></span>
+                    <span class="nap__label">عن طريق الواتساب</span>
+                    <span class="nap__value ltr">{{ config('site.phone.display') }}</span>
+                    <x-whatsapp-button location="contact" label="اضغط للتواصل" />
                 </li>
                 @if ($email)
                     <li>
+                        <span class="icon-circle"><x-icon.mail /></span>
                         <span class="nap__label">البريد الإلكتروني</span>
                         <a class="nap__value" href="mailto:{{ $email }}">{{ $email }}</a>
                     </li>
@@ -45,5 +46,5 @@
         </div>
     </section>
 
-    <x-faq :faqs="$page->faqs" class="section--paper" />
+    <x-faq :faqs="$page->faqs" />
 </x-layout>

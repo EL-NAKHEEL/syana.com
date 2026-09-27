@@ -45,16 +45,19 @@ before starting a phase. Talk to the owner in Egyptian Arabic; code, commits and
   covers cross-brand comparison and service costs.
 
 ## RTL, design and front-end
-- Spec: PLAN.md §8 (from the brief's §7). If `./design` appears, it becomes the source of truth: re-skin tokens first.
-- Tokens only (`resources/css/tokens.css`): `--t45 #E73F1E`, `--t38 #FB6C00`, `--t30 #F9B637`, `--t24 #FFDD9C`,
-  `--ink #1F120C`, `--paper #FFF6E8`. Text on `--t38`/`--t30` is always `--ink`; on `--t45` large text only.
+- **The existing site is the design** (PLAN.md §0 C6, §8; source `legacy/old-site/`). If `./design` appears, it
+  becomes the source of truth: re-skin tokens first.
+- Tokens only (`resources/css/tokens.css`): `--primary #FF5E14`, `--primary-text #D14400`, `--secondary #5F656F`,
+  `--light #F5F5F5`, `--dark #02245B`, `--success #198754`. White on orange only as bold ≥ 1.2rem text.
 - CSS logical properties only (`margin-inline-start`, `inset-inline-end`, `padding-block`…); no `left/right` props.
-- Fonts: Changa 700/800 headings, IBM Plex Sans Arabic 400/500/600 body, Handjet (digits + ° only) for LCD.
-  Self-hosted woff2, `font-display: swap`. Western digits 0–9. **Never `letter-spacing` on Arabic.**
-- JS budget ≤ 50 KB gz on public pages; vanilla modules; no Bootstrap/jQuery. CSS-only motion.
-  Louver intro ≤ 600 ms, once per session, off with `prefers-reduced-motion`; the H1 is visible from the first paint.
+- Fonts: Rubik (headings) + Open Sans (body) as Latin/digit subsets; Arabic uses the platform font like the existing
+  site. Western digits 0–9. **Never `letter-spacing` on Arabic.**
+- Images through `<x-picture>` (AVIF/WebP/JPEG, width/height, Arabic alt). Stock photos are temporary placeholders.
+- JS budget ≤ 50 KB gz on public pages; vanilla modules; no Bootstrap/jQuery/carousels. The H1 is visible from
+  the first paint.
 - WCAG 2.2 AA: visible focus, 44 px targets, decorative elements `aria-hidden`.
 - Copy tone: simplified MSA for titles, meta, H1s, specs; light Egyptian colloquial for CTAs, hero slogan, friendly body.
+- Tracking (GA4/GTM/Google Ads call conversion) loads only in production.
 
 ## Security
 - Admin (`/admin`) requires MFA for every user; login throttled. Security headers middleware stays on; CSP is

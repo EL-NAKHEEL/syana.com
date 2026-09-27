@@ -1,13 +1,13 @@
 <?php
 
 /*
-| Guards the design-system rules from CLAUDE.md: token contrast, logical properties only,
-| no letter-spacing on Arabic, Handjet only for LCD digits.
+| Guards the design-system rules from CLAUDE.md: the existing site's tokens, WCAG contrast for the pairs the
+| templates use, logical properties only, no letter-spacing on Arabic, Latin-only webfont subsets.
 */
 
 function tokens(): array
 {
-    preg_match_all('/--(t45|t38|t30|t24|ink|paper):\s*(#[0-9a-f]{6})/i', file_get_contents(resource_path('css/tokens.css')), $m);
+    preg_match_all('/--(primary|primary-text|secondary|light|dark|white|success):\s*(#[0-9a-f]{6})/i', file_get_contents(resource_path('css/tokens.css')), $m);
 
     return array_combine($m[1], $m[2]);
 }
@@ -30,9 +30,9 @@ function contrast(string $a, string $b): float
     return (max($l1, $l2) + 0.05) / (min($l1, $l2) + 0.05);
 }
 
-it('keeps the brand tokens exactly as specified', function () {
-    expect(tokens())->toBe([
-        't45' => '#e73f1e', 't38' => '#fb6c00', 't30' => '#f9b637', 't24' => '#ffdd9c', 'ink' => '#1f120c', 'paper' => '#fff6e8',
+it('keeps the existing site\'s brand colors', function () {
+    expect(tokens())->toMatchArray([
+        'primary' => '#ff5e14', 'secondary' => '#5f656f', 'light' => '#f5f5f5', 'dark' => '#02245b',
     ]);
 });
 
@@ -41,13 +41,14 @@ it('meets WCAG AA for the allowed text/background pairs', function (string $text
 
     expect(contrast($t[$text], $t[$bg]))->toBeGreaterThanOrEqual($min);
 })->with([
-    'ink on t38 (actions)' => ['ink', 't38', 4.5],
-    'ink on t30' => ['ink', 't30', 4.5],
-    'ink on t24' => ['ink', 't24', 4.5],
-    'ink on paper' => ['ink', 'paper', 7.0],
-    't30 LCD digits on ink' => ['t30', 'ink', 4.5],
-    'paper on t45 (large text only)' => ['paper', 't45', 3.0],
-    'ink on t45 (large text only)' => ['ink', 't45', 3.0],
+    'body text on white' => ['secondary', 'white', 4.5],
+    'body text on light sections' => ['secondary', 'light', 4.5],
+    'headings on white' => ['dark', 'white', 7.0],
+    'white on navy' => ['white', 'dark', 7.0],
+    'small orange text on white' => ['primary-text', 'white', 4.5],
+    'white on success buttons' => ['white', 'success', 4.5],
+    'white on orange (bold ≥ 1.2rem only)' => ['white', 'primary', 3.0],
+    'orange on navy' => ['primary', 'dark', 4.5],
 ]);
 
 it('uses logical properties and never letter-spacing', function () {
@@ -62,8 +63,16 @@ it('uses logical properties and never letter-spacing', function () {
     }
 });
 
-it('limits Handjet to the LCD digits subset', function () {
+it('serves Latin-only webfont subsets (Arabic uses the platform font, as on the existing site)', function () {
     $css = file_get_contents(resource_path('css/fonts.css'));
 
-    expect($css)->toContain('unicode-range: U+0020, U+0030-0039, U+00B0;');
+    expect(substr_count($css, '@font-face'))->toBe(4)
+        ->and(substr_count($css, 'unicode-range: U+0020-007E'))->toBe(4)
+        ->and($css)->not->toContain('U+0600');
+});
+
+it('keeps orange buttons bold and large enough for white-on-orange contrast', function () {
+    $css = file_get_contents(resource_path('css/components/buttons.css'));
+
+    expect($css)->toMatch('/\.btn-primary \{[^}]*font-size: 1\.2rem;[^}]*font-weight: 700;/s');
 });

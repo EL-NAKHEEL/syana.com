@@ -21,8 +21,15 @@ Nothing below is published until confirmed. Drafts carry `[TODO: …]` markers a
 - [ ] Home, About, Contact (source: `database/content/pages.php`)
 
 ## Photos
-- [ ] Real photos of the team, vans, installations and projects (the old site's stock photos are not reused;
-      their URLs return 410)
+- [ ] Real photos of the team, vans, installations and projects. Until then the design uses the old site's stock
+      photos as optimized **temporary** placeholders (`public/images/placeholders/`, `resources/images/placeholders.json`);
+      check their license/attribution or replace them before launch. The old `/img/*` URLs still return 410.
+- [ ] A real logo file if you have one (the site uses the text block «النخيل كوول» like the existing site)
+
+## Tracking
+- [ ] Google Ads call conversion carried over (`AW-11415013969`); confirm the conversion label is still active
+- [ ] Visitor-IP tracker (Google Sheet) from the old site: keep or drop? (PLAN.md Q18; dropped for now)
+- [ ] Real numbers for the stats band (years, team, clients, projects) if you want it back
 
 ## Infrastructure
 - [ ] Hosting with PHP 8.4, MySQL 8, SSH, cron

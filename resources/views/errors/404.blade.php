@@ -5,16 +5,11 @@
         ->noindex();
 @endphp
 <x-layout class="page-error">
-    <header class="page-head">
-        <div class="container">
-            <h1>الصفحة دي مش موجودة</h1>
-            <p>ممكن تكون اتنقلت أو الرابط فيه غلطة. جرّب الرئيسية أو كلّمنا مباشرة.</p>
-        </div>
-    </header>
-    <section class="section section--paper">
+    <x-page-header title="الصفحة دي مش موجودة" intro="ممكن تكون اتنقلت أو الرابط فيه غلطة. جرّب الرئيسية أو كلّمنا مباشرة." />
+    <section class="section">
         <div class="container btn-row">
-            <a class="btn btn--primary" href="{{ route('home') }}">الرئيسية</a>
-            <x-call-button variant="ink" location="404" />
+            <a class="btn btn-primary" href="{{ route('home') }}">الرئيسية</a>
+            <x-call-button location="404" />
         </div>
     </section>
 </x-layout>

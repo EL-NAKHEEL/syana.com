@@ -1,22 +1,36 @@
-@php($nav = app(\App\Support\Navigation::class)->main())
-<header class="site-header">
-    <x-louver variant="thin" />
-    <div class="container site-header__bar">
-        <a class="brand" href="{{ route('home') }}" @if (request()->routeIs('home')) aria-current="page" @endif>
-            <x-site.logo class="brand__logo" width="44" height="44" />
-            <span class="brand__name">{{ config('site.brand.name') }}</span>
-        </a>
-
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>القائمة</button>
-
-        <nav id="site-nav" class="site-nav" aria-label="القائمة الرئيسية">
-            <ul>
-                @foreach ($nav as $item)
-                    <li><a href="{{ $item['url'] }}" @if (request()->routeIs($item['route'])) aria-current="page" @endif>{{ $item['label'] }}</a></li>
-                @endforeach
-            </ul>
-        </nav>
-
-        <x-call-button class="site-header__call" location="header" label="اتصل" />
+@php
+    $nav = app(\App\Support\Navigation::class);
+    $social = app(\App\Settings\BusinessSettings::class)->same_as;
+@endphp
+<div class="topbar">
+    <div class="topbar__phone">
+        <a href="tel:{{ config('site.phone.e164') }}" data-track="click_call" data-track-location="topbar">اتصل بنا : <span class="ltr">{{ config('site.phone.display') }}</span></a>
     </div>
+    <div class="topbar__follow">
+        @if (count($social))
+            <span>تابعنا على:</span>
+            @foreach ($social as $url)
+                <a href="{{ $url }}" rel="noopener">{{ parse_url($url, PHP_URL_HOST) }}</a>
+            @endforeach
+        @endif
+    </div>
+</div>
+
+<header class="navbar">
+    <a class="navbar__brand" href="{{ route('home') }}" @if (request()->routeIs('home')) aria-current="page" @endif>
+        <span>{{ config('site.brand.name') }}</span>
+    </a>
+
+    <button class="navbar__toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="القائمة" data-nav-toggle>
+        <x-icon.menu />
+    </button>
+
+    <nav id="site-nav" class="navbar__nav" aria-label="القائمة الرئيسية">
+        <ul>
+            @foreach ($nav->main() as $item)
+                <li><a href="{{ $item['url'] }}" @if (request()->routeIs($item['route'])) aria-current="page" @endif>{{ $item['label'] }}</a></li>
+            @endforeach
+        </ul>
+        <x-whatsapp-button class="navbar__cta" variant="primary" location="navbar" label="احصل على عرض أسعار" message="السلام عليكم، عايز عرض سعر" />
+    </nav>
 </header>

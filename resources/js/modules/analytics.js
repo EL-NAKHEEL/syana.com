@@ -1,5 +1,5 @@
-// GA4 / GTM are injected after the page is interactive (never render-blocking). IDs come from settings
-// via <meta name="nk-ga4"> / <meta name="nk-gtm">. Events use data-track="event_name" attributes.
+// Google tag (GA4 / Google Ads) or GTM, injected after the page has loaded (never render-blocking) and only
+// in production (the layout omits the meta tags elsewhere). Events use data-track="event_name" attributes.
 const meta = (name) => document.querySelector(`meta[name="${name}"]`)?.content || '';
 
 function loadScript(src) {
@@ -21,29 +21,42 @@ export function track(event, params = {}) {
 export function initAnalytics() {
     const ga4 = meta('nk-ga4');
     const gtm = meta('nk-gtm');
+    const ads = meta('nk-ads');
+    const adsCall = meta('nk-ads-call');
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function gtag() {
+        window.dataLayer.push(arguments);
+    };
 
     const start = () => {
-        window.dataLayer = window.dataLayer || [];
         if (gtm) {
             window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
             loadScript(`https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(gtm)}`);
-        } else if (ga4) {
-            window.gtag = function gtag() {
-                window.dataLayer.push(arguments);
-            };
+        }
+        if (ga4 || ads) {
             window.gtag('js', new Date());
-            window.gtag('config', ga4);
-            loadScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ga4)}`);
+            if (ga4) window.gtag('config', ga4);
+            if (ads) window.gtag('config', ads);
+            loadScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ga4 || ads)}`);
         }
     };
 
-    if (ga4 || gtm) {
+    if (ga4 || gtm || ads) {
         if (document.readyState === 'complete') start();
         else window.addEventListener('load', start, { once: true });
     }
 
     document.addEventListener('click', (event) => {
         const el = event.target.closest('[data-track]');
-        if (el) track(el.dataset.track, { link_url: el.href || undefined, location: el.dataset.trackLocation || undefined });
+        if (!el) return;
+
+        const name = el.dataset.track;
+        track(name, { link_url: el.href || undefined, location: el.dataset.trackLocation || undefined });
+
+        // Same Google Ads call conversion as the existing site (value 1 EGP). The tel: link is not delayed.
+        if (name === 'click_call' && adsCall) {
+            window.gtag('event', 'conversion', { send_to: adsCall, value: 1.0, currency: 'EGP' });
+        }
     });
 }

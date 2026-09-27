@@ -19,37 +19,39 @@ class OgImageRenderer
     public const HEIGHT = 630;
 
     /** Bump when the template changes so cached files are regenerated. */
-    public const VERSION = 1;
+    public const VERSION = 2;
 
-    private const LOUVER = ['#E73F1E', '#FB6C00', '#F9B637', '#FFDD9C'];
-
+    /**
+     * Same look as the site: navy ground, white Arabic title, orange brand block and phone bar.
+     */
     public function render(string $title, ?string $kicker = null): string
     {
         $fonts = resource_path('fonts/src');
         $manager = ImageManager::usingDriver(GdDriver::class);
-        $image = $manager->createImage(self::WIDTH, self::HEIGHT)->fill('#FFF6E8');
+        $image = $manager->createImage(self::WIDTH, self::HEIGHT)->fill('#02245B');
 
-        // Four-stripe louver band (top) and ink footer band.
-        foreach (self::LOUVER as $i => $color) {
-            $image->drawRectangle(fn (RectangleFactory $r) => $r->at(0, $i * 18)->size(self::WIDTH, 18)->background($color));
-        }
-        $image->drawRectangle(fn (RectangleFactory $r) => $r->at(0, self::HEIGHT - 110)->size(self::WIDTH, 110)->background('#1F120C'));
+        // Orange brand block (top right) and phone bar (bottom).
+        $image->drawRectangle(fn (RectangleFactory $r) => $r->at(self::WIDTH - 470, 0)->size(470, 110)->background('#FF5E14'));
+        $image->drawRectangle(fn (RectangleFactory $r) => $r->at(0, self::HEIGHT - 100)->size(self::WIDTH, 100)->background('#FF5E14'));
 
-        $right = self::WIDTH - 80;
+        $right = self::WIDTH - 70;
+
+        $image->text($this->shape((string) config('site.brand.name'), 40), $right, 55, fn (FontFactory $f) => $f
+            ->filepath($fonts.'/NotoSansArabic-Bold.ttf')->size(52)->color('#FFFFFF')->align('right', 'center'));
 
         if ($kicker !== null && $kicker !== '') {
-            $image->text($this->shape($kicker, 60), $right, 130, fn (FontFactory $f) => $f
-                ->filepath($fonts.'/IBMPlexSansArabic-SemiBold.ttf')->size(34)->color('#E73F1E')->align('right', 'top'));
+            $image->text($this->shape($kicker, 60), $right, 170, fn (FontFactory $f) => $f
+                ->filepath($fonts.'/NotoSansArabic-SemiBold.ttf')->size(34)->color('#FF7A3D')->align('right', 'top'));
         }
 
-        $image->text($this->shape($title, 30), $right, 200, fn (FontFactory $f) => $f
-            ->filepath($fonts.'/Changa-ExtraBold.ttf')->size(68)->color('#1F120C')->align('right', 'top')->lineHeight(1.9));
+        $image->text($this->shape($title, 30), $right, 235, fn (FontFactory $f) => $f
+            ->filepath($fonts.'/NotoSansArabic-Bold.ttf')->size(62)->color('#FFFFFF')->align('right', 'top')->lineHeight(1.75));
 
-        $image->text($this->shape(config('site.brand.name'), 40), $right, self::HEIGHT - 55, fn (FontFactory $f) => $f
-            ->filepath($fonts.'/Changa-ExtraBold.ttf')->size(44)->color('#F9B637')->align('right', 'center'));
+        $image->text($this->shape('اتصل بنا', 20), $right, self::HEIGHT - 50, fn (FontFactory $f) => $f
+            ->filepath($fonts.'/NotoSansArabic-Bold.ttf')->size(40)->color('#FFFFFF')->align('right', 'center'));
 
-        $image->text(config('site.phone.display'), 80, self::HEIGHT - 55, fn (FontFactory $f) => $f
-            ->filepath($fonts.'/Handjet-Medium.ttf')->size(56)->color('#F9B637')->align('left', 'center'));
+        $image->text((string) config('site.phone.display'), 70, self::HEIGHT - 50, fn (FontFactory $f) => $f
+            ->filepath($fonts.'/Rubik-Bold.ttf')->size(48)->color('#FFFFFF')->align('left', 'center'));
 
         return (string) $image->encodeUsingMediaType('image/jpeg', quality: 82);
     }

@@ -1,0 +1,102 @@
+{
+  "split-ac-units-hot-and-cool-air": {
+    "widths": [
+      640,
+      1024,
+      1600,
+      1920
+    ],
+    "ratio": 0.5625,
+    "placeholder": true
+  },
+  "engineers-reviewing-site-plans": {
+    "widths": [
+      768,
+      1366,
+      1920
+    ],
+    "ratio": 0.5625,
+    "placeholder": true
+  },
+  "technician-servicing-indoor-split-ac": {
+    "widths": [
+      320,
+      615
+    ],
+    "ratio": 1.4813,
+    "placeholder": true
+  },
+  "technician-installing-outdoor-ac-unit": {
+    "widths": [
+      320,
+      615
+    ],
+    "ratio": 1.4829,
+    "placeholder": true
+  },
+  "technician-on-ladder-servicing-ac": {
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "ratio": 1.5,
+    "placeholder": true
+  },
+  "technician-checking-refrigerant-gauges": {
+    "widths": [
+      130,
+      260
+    ],
+    "ratio": 1.0,
+    "placeholder": true
+  },
+  "technician-inspecting-condenser": {
+    "widths": [
+      130,
+      260
+    ],
+    "ratio": 1.0,
+    "placeholder": true
+  },
+  "technician-preparing-installation-tools": {
+    "widths": [
+      130,
+      260
+    ],
+    "ratio": 1.0,
+    "placeholder": true
+  },
+  "apartment-building-facade": {
+    "widths": [
+      130,
+      260
+    ],
+    "ratio": 1.0,
+    "placeholder": true
+  },
+  "indoor-ac-cleaning-square": {
+    "widths": [
+      130,
+      260
+    ],
+    "ratio": 1.0,
+    "placeholder": true
+  },
+  "outdoor-unit-installation-square": {
+    "widths": [
+      130,
+      260
+    ],
+    "ratio": 1.0,
+    "placeholder": true
+  },
+  "technician-on-ladder-square": {
+    "widths": [
+      130,
+      260
+    ],
+    "ratio": 1.0,
+    "placeholder": true
+  }
+}

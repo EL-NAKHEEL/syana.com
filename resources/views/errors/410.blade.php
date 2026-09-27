@@ -5,15 +5,10 @@
         ->noindex();
 @endphp
 <x-layout class="page-error">
-    <header class="page-head">
-        <div class="container">
-            <h1>المحتوى ده اتشال</h1>
-            <p>الصفحة أو الصورة دي مش متاحة تاني.</p>
-        </div>
-    </header>
-    <section class="section section--paper">
+    <x-page-header title="المحتوى ده اتشال" intro="الصفحة أو الصورة دي مش متاحة تاني." />
+    <section class="section">
         <div class="container btn-row">
-            <a class="btn btn--primary" href="{{ route('home') }}">الرئيسية</a>
+            <a class="btn btn-primary" href="{{ route('home') }}">الرئيسية</a>
         </div>
     </section>
 </x-layout>

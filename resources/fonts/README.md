@@ -1,12 +1,13 @@
 # Fonts
 
-All fonts are licensed under the SIL Open Font License 1.1 (see `src/OFL-*.txt`) and were downloaded from Google Fonts.
+All fonts are licensed under the SIL Open Font License 1.1 (see `src/OFL-*.txt`, `src/LICENSE-OpenSans.txt`)
+and were downloaded from Google Fonts.
 
-| Family | Use | Weights |
+| Family | Use | Served to browsers |
 |---|---|---|
-| Changa | headings | 700, 800 |
-| IBM Plex Sans Arabic | body / UI | 400, 500, 600 |
-| Handjet | LCD numerals only (digits, `°`, space) | 500 |
+| Rubik 500/700 | headings, nav, numbers (the existing site's heading font) | yes, Latin/digits subset |
+| Open Sans 400/600 | body Latin text and digits (the existing site's body font) | yes, Latin/digits subset |
+| Noto Sans Arabic 600/700 | Arabic text in generated OG images (GD needs a TTF) | no |
 
-`src/` holds the full TTFs (also used by the OG image generator). `web/` holds the woff2 subsets served to browsers;
-rebuild them with `scripts/fonts/subset.sh` (needs `pip install fonttools brotli`).
+Arabic text on the site uses the platform's Arabic system font, exactly like the existing site (Rubik and Open
+Sans have no Arabic glyphs). Rebuild the subsets with `scripts/fonts/subset.sh` (`pip install fonttools brotli`).

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Pages\Schemas;
 
 use App\Filament\Components\SeoSection;
 use App\Models\Page;
+use App\Support\Placeholders;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
@@ -45,10 +46,10 @@ class PageForm
                     ->columnSpan(2)
                     ->visible($isHome)
                     ->schema([
+                        TextInput::make('data.hero.label')->label('السطر البرتقالي فوق العنوان')->maxLength(60),
                         TextInput::make('data.hero.slogan')->label('الشعار (جزء من H1)')->maxLength(60),
                         TextInput::make('data.hero.keywords')->label('سطر الكلمات المفتاحية (جزء من H1)')->maxLength(80),
                         Textarea::make('data.hero.lead')->label('نص تحت العنوان')->rows(2),
-                        TextInput::make('data.hero.stamp')->label('الختم')->maxLength(40),
                     ]),
 
                 Section::make('أقسام الرئيسية')
@@ -56,9 +57,12 @@ class PageForm
                     ->visible($isHome)
                     ->collapsible()
                     ->schema([
+                        TextInput::make('data.about.heading')->label('عنوان «من نحن»'),
+                        Textarea::make('data.about.text')->label('نص «من نحن»')->rows(2),
+                        Repeater::make('data.about.checklist')->label('نقاط «من نحن»')->simple(TextInput::make('item')->required()->maxLength(120))->addActionLabel('أضف نقطة'),
                         TextInput::make('data.services.heading')->label('عنوان قسم الخدمات'),
                         Textarea::make('data.services.intro')->label('مقدمة الخدمات')->rows(2),
-                        self::items('data.services.items', 'خدمة'),
+                        self::items('data.services.items', 'خدمة', withImage: true),
                         TextInput::make('data.why.heading')->label('عنوان «ليه إحنا»'),
                         self::items('data.why.items', 'ميزة'),
                         TextInput::make('data.process.heading')->label('عنوان خطوات الشغل'),
@@ -88,14 +92,15 @@ class PageForm
             ]);
     }
 
-    private static function items(string $path, string $noun): Repeater
+    private static function items(string $path, string $noun, bool $withImage = false): Repeater
     {
         return Repeater::make($path)
             ->label('العناصر')
-            ->schema([
+            ->schema(array_filter([
                 TextInput::make('title')->label('العنوان')->required()->maxLength(120),
                 Textarea::make('text')->label('النص')->required()->rows(2),
-            ])
+                $withImage ? Select::make('image')->label('الصورة (مؤقتة لحد الصور الحقيقية)')->options(Placeholders::options()) : null,
+            ]))
             ->itemLabel(fn (array $state) => $state['title'] ?? null)
             ->collapsed()
             ->addActionLabel('أضف '.$noun);

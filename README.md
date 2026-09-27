@@ -47,4 +47,5 @@ On a VPS, run `php artisan queue:work` under Supervisor and set `QUEUE_SUPERVISE
 ## Assets
 
 - Fonts: `scripts/fonts/subset.sh` rebuilds the woff2 subsets (OFL, see `resources/fonts/README.md`).
-- Icons: `scripts/icons/build.sh` rasterizes `resources/images/logo.svg` (needs Chromium + Pillow).
+- Icons: `scripts/icons/build.sh` renders the favicon and logo PNGs (needs Chromium + Pillow).
+- Placeholder photos: `scripts/images/build-placeholders.py` builds the AVIF/WebP/JPEG sizes from `legacy/old-site/img`.

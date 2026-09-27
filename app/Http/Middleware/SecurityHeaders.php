@@ -44,15 +44,17 @@ class SecurityHeaders
     {
         $google = 'https://www.googletagmanager.com';
         $analytics = 'https://*.google-analytics.com https://*.analytics.google.com';
+        // Google Ads call conversions (carried over from the existing site).
+        $ads = 'https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.doubleclick.net https://www.google.com';
 
         return implode('; ', [
             "default-src 'self'",
-            "script-src 'self' ".InlineScripts::cspHashes()." {$google}",
+            "script-src 'self' ".InlineScripts::cspHashes()." {$google} {$ads}",
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: https:",
             "font-src 'self'",
-            "connect-src 'self' {$analytics} {$google}",
-            'frame-src https://www.google.com https://www.youtube-nocookie.com',
+            "connect-src 'self' {$analytics} {$google} {$ads}",
+            'frame-src https://www.google.com https://www.youtube-nocookie.com https://td.doubleclick.net https://www.googletagmanager.com',
             "object-src 'none'",
             "base-uri 'self'",
             "form-action 'self' https://wa.me https://api.whatsapp.com",

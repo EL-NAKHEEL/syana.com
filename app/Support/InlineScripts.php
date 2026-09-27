@@ -9,10 +9,10 @@ namespace App\Support;
 class InlineScripts
 {
     /**
-     * Runs before first paint: marks JS support and plays the louver intro once per session
-     * (skipped under prefers-reduced-motion). The H1 is never hidden by it.
+     * Runs before first paint: marks JS support so progressive enhancements (the mobile menu) can hide
+     * content only when JS is there to reveal it.
      */
-    public const HEAD = "document.documentElement.classList.replace('no-js','js');try{if(!sessionStorage.getItem('nk-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro');sessionStorage.setItem('nk-intro','1')}}catch(e){}";
+    public const HEAD = "document.documentElement.classList.replace('no-js','js')";
 
     public static function cspHashes(): string
     {

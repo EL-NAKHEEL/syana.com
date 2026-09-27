@@ -25,8 +25,15 @@ class ManageAnalytics extends SettingsPage
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Google')
-                ->description('استخدم واحد بس: GTM أو GA4. لو الاتنين موجودين هيتحمّل GTM.')
+            Section::make('Google Ads')
+                ->description('نفس حساب الإعلانات اللي على الموقع القديم: كل ضغطة على «اتصل» بتتسجل conversion.')
+                ->columns(2)
+                ->schema([
+                    TextInput::make('google_ads_id')->label('Google Ads ID')->placeholder('AW-XXXXXXXXXX')->regex('/^AW-[0-9]+$/')->extraInputAttributes(['dir' => 'ltr']),
+                    TextInput::make('google_ads_call_label')->label('Conversion label للمكالمات')->regex('/^[A-Za-z0-9_-]+$/')->extraInputAttributes(['dir' => 'ltr']),
+                ]),
+            Section::make('Google Analytics / Tag Manager')
+                ->description('لو بتستخدم GTM سيب GA4 فاضي وضيف التاجات من جوه GTM.')
                 ->columns(2)
                 ->schema([
                     TextInput::make('ga4_measurement_id')->label('GA4 Measurement ID')->placeholder('G-XXXXXXX')->regex('/^G-[A-Z0-9]+$/')->extraInputAttributes(['dir' => 'ltr']),
