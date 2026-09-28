@@ -39,6 +39,16 @@ it('renders every admin screen for an admin with MFA enrolled', function (string
     '/admin/facet-pages/create',
     '/admin/orders',
     '/admin/manage-calculator',
+    '/admin/people',
+    '/admin/people/create',
+    '/admin/post-categories',
+    '/admin/post-categories/create',
+    '/admin/posts',
+    '/admin/posts/create',
+    '/admin/projects',
+    '/admin/projects/create',
+    '/admin/reviews',
+    '/admin/seo-health',
 ]);
 
 it('opens the page editor with the SEO panel', function () {

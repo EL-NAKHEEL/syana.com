@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\ResolvesPublicRecords;
 use App\Models\Area;
+use App\Models\Project;
+use App\Models\Review;
 use App\Seo\Schema\SchemaGraph;
 use App\Seo\Seo;
 use App\Seo\TitleBuilder;
@@ -75,6 +77,9 @@ class AreaController extends Controller
             ])
             ->fromModel($area);
 
-        return view('areas.show', ['area' => $area, 'services' => $services, 'neighbors' => $neighbors]);
+        $reviews = Review::query()->approved()->with('area')->where('area_id', $area->id)->limit(6)->get();
+        $projects = Project::query()->published()->where('area_id', $area->id)->latest('completed_on')->limit(3)->get();
+
+        return view('areas.show', ['area' => $area, 'services' => $services, 'neighbors' => $neighbors, 'reviews' => $reviews, 'projects' => $projects]);
     }
 }

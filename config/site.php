@@ -3,8 +3,10 @@
 use App\Seo\Sitemap\AreasSitemap;
 use App\Seo\Sitemap\FacetsSitemap;
 use App\Seo\Sitemap\PagesSitemap;
+use App\Seo\Sitemap\PostsSitemap;
 use App\Seo\Sitemap\PricesSitemap;
 use App\Seo\Sitemap\ProductsSitemap;
+use App\Seo\Sitemap\ProjectsSitemap;
 use App\Seo\Sitemap\ServicesSitemap;
 
 return [
@@ -60,6 +62,8 @@ return [
         PricesSitemap::class,
         ProductsSitemap::class,
         FacetsSitemap::class,
+        PostsSitemap::class,
+        ProjectsSitemap::class,
     ],
 
     'security' => [

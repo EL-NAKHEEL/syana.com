@@ -100,6 +100,8 @@
         </section>
     @endif
 
+    <x-reviews-section :reviews="$reviews" :heading="'آراء اللي اشتروا التكييف ده'" />
+
     <x-faq :faqs="$product->faqs" />
 
     @if ($related->isNotEmpty())

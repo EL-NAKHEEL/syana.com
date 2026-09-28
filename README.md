@@ -44,6 +44,14 @@ One cron entry runs everything (sitemaps, backups, queue draining on shared host
 
 On a VPS, run `php artisan queue:work` under Supervisor and set `QUEUE_SUPERVISED=true`.
 
+IndexNow pings (Bing/Yandex) are queued on every publish/update/unpublish in production. The key lives in
+admin › الإعدادات › إعدادات SEO and is served at `/{key}.txt`; disable with `INDEXNOW_ENABLED=false`.
+
+## Admin SEO health
+
+admin › SEO › صحة SEO lists duplicate titles/descriptions/primary keywords, manual `noindex` records, published
+areas failing the local-content guard, images without Arabic alt and the top unresolved 404s.
+
 ## Assets
 
 - Fonts: `scripts/fonts/subset.sh` rebuilds the woff2 subsets (OFL, see `resources/fonts/README.md`).

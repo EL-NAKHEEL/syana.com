@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\ResolvesPublicRecords;
 use App\Models\Area;
+use App\Models\Review;
 use App\Models\Service;
 use App\Seo\Schema\SchemaGraph;
 use App\Seo\Seo;
@@ -69,7 +70,7 @@ class ServiceController extends Controller
             ->addNode($this->serviceNode($service, $url, $areas))
             ->fromModel($service);
 
-        return view('services.show', ['service' => $service, 'areas' => $areas, 'others' => $others, 'guides' => $guides]);
+        return view('services.show', ['service' => $service, 'areas' => $areas, 'others' => $others, 'guides' => $guides, 'reviews' => Review::shownFor($service)]);
     }
 
     /**

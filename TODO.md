@@ -19,6 +19,14 @@ Nothing below is published until confirmed. Drafts carry `[TODO: …]` markers a
 
 ## Draft copy to review (admin › المحتوى › الصفحات)
 - [ ] Home, About, Contact (source: `database/content/pages.php`)
+- [ ] Policy pages: warranty, shipping & returns, privacy, terms (drafts with `[TODO]`; legal name, commercial
+      register and tax card for the terms page)
+
+## Blog, projects, reviews
+- [ ] Real authors (admin › المدونة › الكتّاب والفريق): name, job, experience, real photo. Posts need a published author.
+- [ ] First articles (topic list in PLAN.md §7); the blog hub stays `noindex` until 3 posts are live
+- [ ] Real projects with the client's permission and real photos; hub `noindex` until 3
+- [ ] Collect genuine reviews (form at `/reviews`, or ask past clients); every review is moderated before it shows
 
 ## Photos
 - [ ] Real photos of the team, vans, installations and projects. Until then the design uses the old site's stock

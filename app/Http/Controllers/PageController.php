@@ -66,6 +66,30 @@ class PageController extends Controller
         return view('pages.contact', ['page' => $page]);
     }
 
+    /** Policy pages: route slug → [title, fallback description]. */
+    public const POLICIES = [
+        'warranty' => ['سياسة الضمان', 'سياسة الضمان في النخيل كوول: الضمان على التكييفات والتركيب والصيانة وإزاي تطلب خدمة الضمان. عندك سؤال؟ اتصل بينا على 01055207525.'],
+        'shipping-returns' => ['التوصيل والاسترجاع', 'سياسة التوصيل والاسترجاع في النخيل كوول: مناطق وتكلفة ومواعيد التوصيل، وشروط الاسترجاع والاستبدال. للاستفسار اتصل على 01055207525.'],
+        'privacy' => ['سياسة الخصوصية', 'إزاي النخيل كوول بتتعامل مع بياناتك: البيانات اللي بنجمعها من الفورمات والطلبات، بنستخدمها في إيه، وحقوقك فيها. للاستفسار اتصل 01055207525.'],
+        'terms' => ['الشروط والأحكام', 'الشروط والأحكام الخاصة باستخدام موقع النخيل كوول وطلب المنتجات والخدمات، والدفع والتوصيل والضمان. لو عندك أي سؤال اتصل بينا على 01055207525.'],
+    ];
+
+    public function policy(string $slug): View
+    {
+        $page = $this->resolve($slug);
+        [$title, $description] = self::POLICIES[$slug];
+
+        $this->seo()
+            ->title($title)
+            ->description($description)
+            ->canonical(route($slug))
+            ->breadcrumbs([['name' => $page->title, 'url' => route($slug)]])
+            ->dates($page->published_at, $page->lastModified())
+            ->fromModel($page);
+
+        return view('pages.default', ['page' => $page]);
+    }
+
     /**
      * Unpublished pages are 404 for visitors; signed-in admins see a noindex draft preview.
      */

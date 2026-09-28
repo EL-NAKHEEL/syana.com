@@ -8,6 +8,7 @@ use App\Catalog\ProductFilters;
 use App\Http\Controllers\Concerns\ResolvesPublicRecords;
 use App\Models\Brand;
 use App\Models\Product;
+use App\Models\Review;
 use App\Seo\Schema\ProductSchema;
 use App\Seo\Seo;
 use App\Seo\TitleBuilder;
@@ -116,14 +117,14 @@ class StoreController extends Controller
                 ['name' => $product->descriptiveName(false), 'url' => $url],
             ])
             ->dates($product->published_at, $product->lastModified())
-            ->addNode(app(ProductSchema::class)->node($product, $url))
+            ->addNode(app(ProductSchema::class)->node($product, $url, $reviews = Review::shownFor($product)))
             ->fromModel($product);
 
         if ($image = $product->primaryImage()) {
             $seo->ogImage($image->getFullUrl('large'), $product->descriptiveName());
         }
 
-        return view('store.product', ['product' => $product, 'related' => $related, 'facets' => $facets]);
+        return view('store.product', ['product' => $product, 'related' => $related, 'facets' => $facets, 'reviews' => $reviews]);
     }
 
     private function facet(Request $request, Seo $seo, Facet $facet): View|RedirectResponse

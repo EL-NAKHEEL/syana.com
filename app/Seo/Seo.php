@@ -103,6 +103,15 @@ class Seo
     }
 
     /**
+     * Hub rule (owner decision C1): areas, projects, reviews, blog and category hubs stay noindex, follow
+     * until they list at least `site.seo.hub_min_items` published items.
+     */
+    public function hub(int $items): static
+    {
+        return $items < (int) config('site.seo.hub_min_items') ? $this->noindex() : $this;
+    }
+
+    /**
      * Breadcrumb trail after «الرئيسية» (added automatically). The last item is the current page.
      *
      * @param  array<int, array{name: string, url: string}>  $items

@@ -4,7 +4,11 @@ use App\Models\Area;
 use App\Models\Brand;
 use App\Models\FacetPage;
 use App\Models\Page;
+use App\Models\Person;
+use App\Models\Post;
+use App\Models\PostCategory;
 use App\Models\Product;
+use App\Models\Project;
 use App\Models\Service;
 use Dom\HTMLDocument;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -118,6 +122,49 @@ function publishCatalog(int $products = 3): array
     }
 
     return ['brand' => $brand, 'products' => $items];
+}
+
+/**
+ * A published author and category with live posts (post-1 … post-N).
+ *
+ * @return array{author: Person, category: PostCategory, posts: Collection<int, Post>}
+ */
+function publishBlog(int $posts = 3): array
+{
+    $author = Person::query()->create([
+        'slug' => 'ahmed', 'name' => 'أحمد الفني', 'job_title' => 'فني تكييف', 'bio' => 'فني تكييف في فريق الاختبار.',
+        'is_published' => true, 'published_at' => now()->subWeek(),
+    ]);
+    $category = PostCategory::query()->create(['slug' => 'maintenance', 'name' => 'الصيانة', 'intro' => 'مقالات عن الصيانة.', 'is_published' => true]);
+
+    $items = collect(range(1, $posts))->map(fn (int $i) => Post::query()->create([
+        'slug' => 'post-'.$i,
+        'title' => 'مقال تجريبي عن التكييف رقم '.$i,
+        'excerpt' => 'ملخص المقال رقم '.$i.' عن مشاكل التكييف وحلولها العملية في البيت.',
+        'body' => '<h2>السبب الأول</h2><p>'.str_repeat('كلام مفيد عن التكييف ', 40).'</p><h3>تفصيلة</h3><p>نص.</p><h2>الحل</h2><p>نص.</p>',
+        'author_id' => $author->id,
+        'post_category_id' => $category->id,
+        'is_published' => true,
+        'published_at' => now()->subDays($i),
+    ]));
+
+    return ['author' => $author, 'category' => $category, 'posts' => $items];
+}
+
+/**
+ * @return Collection<int, Project>
+ */
+function publishProjects(int $count = 3): Collection
+{
+    return collect(range(1, $count))->map(fn (int $i) => Project::query()->create([
+        'slug' => 'project-'.$i,
+        'title' => 'تركيب تكييفات لمكتب إداري رقم '.$i,
+        'client_type' => 'office',
+        'summary' => 'تركيب وتأسيس تكييفات لمكتب إداري رقم '.$i.' مع تجربة كاملة بعد التركيب.',
+        'completed_on' => now()->subMonths($i),
+        'is_published' => true,
+        'published_at' => now()->subDays($i),
+    ]));
 }
 
 function html(string $markup): HTMLDocument

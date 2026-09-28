@@ -4,8 +4,11 @@ namespace App\Support;
 
 use App\Models\Area;
 use App\Models\Page;
+use App\Models\Post;
 use App\Models\PriceGuide;
 use App\Models\Product;
+use App\Models\Project;
+use App\Models\Review;
 use App\Models\Service;
 use App\Settings\BusinessSettings;
 use Illuminate\Support\Collection;
@@ -33,6 +36,8 @@ class Navigation
             ['label' => 'خدماتنا', 'route' => 'services.index', 'when' => fn () => $this->services()->isNotEmpty()],
             ['label' => 'الأسعار', 'route' => 'prices.index', 'when' => fn () => $this->hasLivePriceGuides()],
             ['label' => 'مناطق الخدمة', 'route' => 'areas.index', 'when' => fn () => $this->areas()->isNotEmpty()],
+            ['label' => 'مشاريعنا', 'route' => 'projects.index', 'when' => fn () => $this->memo['projects'] ??= Project::query()->published()->exists()],
+            ['label' => 'المدونة', 'route' => 'blog.index', 'when' => fn () => $this->memo['blog'] ??= Post::query()->published()->whereHas('author', fn ($q) => $q->published())->exists()],
             ['label' => 'من نحن', 'route' => 'about', 'when' => fn () => $this->pageIsLive('about')],
             ['label' => 'تواصل معنا', 'route' => 'contact', 'when' => fn () => $this->pageIsLive('contact')],
         ]);
@@ -45,7 +50,27 @@ class Navigation
      */
     public function footer(): array
     {
-        return array_values(array_filter($this->main(), fn (array $item) => $item['route'] !== 'home'));
+        return [
+            ...array_values(array_filter($this->main(), fn (array $item) => $item['route'] !== 'home')),
+            ...$this->filter([
+                ['label' => 'آراء العملاء', 'route' => 'reviews.index', 'when' => fn () => Review::query()->approved()->exists()],
+            ]),
+        ];
+    }
+
+    /**
+     * Policy pages (warranty, returns, privacy, terms) linked sitewide once published.
+     *
+     * @return array<int, array{label: string, url: string, route: string}>
+     */
+    public function policies(): array
+    {
+        return $this->filter([
+            ['label' => 'سياسة الضمان', 'route' => 'warranty', 'when' => fn () => $this->pageIsLive('warranty')],
+            ['label' => 'التوصيل والاسترجاع', 'route' => 'shipping-returns', 'when' => fn () => $this->pageIsLive('shipping-returns')],
+            ['label' => 'سياسة الخصوصية', 'route' => 'privacy', 'when' => fn () => $this->pageIsLive('privacy')],
+            ['label' => 'الشروط والأحكام', 'route' => 'terms', 'when' => fn () => $this->pageIsLive('terms')],
+        ]);
     }
 
     /**

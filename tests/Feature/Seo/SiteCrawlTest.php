@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\Area;
+use App\Models\Page;
 use App\Models\PriceGuide;
+use App\Models\Review;
 use App\Seo\Sitemap\SitemapGenerator;
 use Tests\Support\SiteCrawler;
 
@@ -29,7 +32,23 @@ beforeEach(function () {
     ]);
     $guide->services()->sync($services->pluck('id'));
 
-    publishCatalog(3);
+    ['products' => $products] = publishCatalog(3);
+
+    ['posts' => $posts] = publishBlog(3);
+    $posts[0]->update(['service_id' => $services[0]->id, 'body' => $posts[0]->body.'<p>[product:sharp-ah-1]</p>']);
+    publishProjects(3)->each->update(['area_id' => Area::query()->value('id'), 'service_id' => $services[0]->id]);
+
+    foreach ([
+        ['product', $products[0]->id, 'تكييف ممتاز والتركيب كان نضيف وفي الميعاد.'],
+        ['service', $services[0]->id, 'الفني شاطر وشرح لي سبب العطل قبل ما يصلحه.'],
+        [null, null, 'تعامل محترم من أول مكالمة لحد ما الشغل خلص.'],
+    ] as [$type, $id, $body]) {
+        Review::query()->create(['name' => 'عميل', 'rating' => 5, 'body' => $body, 'status' => 'approved', 'reviewable_type' => $type, 'reviewable_id' => $id, 'area_id' => Area::query()->value('id')]);
+    }
+
+    foreach (['warranty' => 'سياسة الضمان', 'shipping-returns' => 'التوصيل والاسترجاع', 'privacy' => 'سياسة الخصوصية', 'terms' => 'الشروط والأحكام'] as $slug => $title) {
+        Page::factory()->published()->create(['slug' => $slug, 'template' => 'default', 'title' => $title, 'body' => '<p>نص السياسة للاختبار.</p>']);
+    }
 });
 
 it('reaches every published page with a 200 and no broken internal links', function () {
@@ -69,7 +88,7 @@ it('gives every page a unique title and description within length limits', funct
         $description = (string) $doc->querySelector('meta[name="description"]')?->getAttribute('content');
 
         expect(mb_strlen($title))->toBeGreaterThanOrEqual(10)->toBeLessThanOrEqual(config('site.seo.title_hard_max'), "{$url} title: {$title}")
-            ->and(mb_strlen($description))->toBeGreaterThanOrEqual(config('site.seo.description_hard_min'))
+            ->and(mb_strlen($description))->toBeGreaterThanOrEqual(config('site.seo.description_hard_min'), "{$url} description too short: {$description}")
             ->toBeLessThanOrEqual(config('site.seo.description_hard_max'), "{$url} description: {$description}");
 
         $titles[$url] = $title;

@@ -4,19 +4,24 @@ namespace App\Seo\Schema;
 
 use App\Catalog\Catalog;
 use App\Models\Product;
+use App\Models\Review;
+use Illuminate\Support\Collection;
 
 /**
  * Product + Offer JSON-LD (PLAN.md §6.2). On sale: price is the current price and the original price is a
- * StrikethroughPrice UnitPriceSpecification. No aggregateRating until genuine product reviews show on the page
- * (P4). shippingDetails / hasMerchantReturnPolicy are added only once the owner confirms them (Q8).
+ * StrikethroughPrice UnitPriceSpecification. aggregateRating/review come only from approved reviews of this
+ * product that are shown on the page. shippingDetails / hasMerchantReturnPolicy are added only once the owner confirms them (Q8).
  */
 class ProductSchema
 {
     /**
+     * @param  Collection<int, Review>|null  $reviews
      * @return array<string, mixed>
      */
-    public function node(Product $product, string $url): array
+    public function node(Product $product, string $url, ?Collection $reviews = null): array
     {
+        $reviews ??= new Collection;
+
         $images = $product->media->where('collection_name', 'images')->map(fn ($m) => $m->getFullUrl('large'))->values()->all();
 
         $properties = array_values(array_filter([
@@ -59,6 +64,21 @@ class ProductSchema
             'image' => $images ?: null,
             'additionalProperty' => $properties,
             'offers' => $offer,
+            // Only genuine, approved reviews of this product that are visible on this page.
+            'aggregateRating' => $reviews->isEmpty() ? null : [
+                '@type' => 'AggregateRating',
+                'ratingValue' => number_format((float) $reviews->avg('rating'), 1, '.', ''),
+                'reviewCount' => $reviews->count(),
+                'bestRating' => 5,
+                'worstRating' => 1,
+            ],
+            'review' => $reviews->isEmpty() ? null : $reviews->map(fn (Review $review) => [
+                '@type' => 'Review',
+                'reviewRating' => ['@type' => 'Rating', 'ratingValue' => $review->rating, 'bestRating' => 5],
+                'author' => ['@type' => 'Person', 'name' => $review->name],
+                'datePublished' => $review->approved_at?->toDateString(),
+                'reviewBody' => $review->body,
+            ])->values()->all(),
             'mainEntityOfPage' => SchemaGraph::ref(SchemaGraph::pageId($url, 'webpage')),
         ], fn ($value) => $value !== null);
     }

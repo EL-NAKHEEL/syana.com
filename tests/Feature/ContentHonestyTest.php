@@ -9,13 +9,13 @@ use Illuminate\Validation\ValidationException;
 it('seeds the migrated drafts unpublished and never overwrites edits', function () {
     $this->seed(LegacyContentSeeder::class);
 
-    expect(Page::query()->count())->toBe(3)
+    expect(Page::query()->count())->toBe(7)
         ->and(Page::query()->published()->count())->toBe(0);
 
     Page::query()->where('slug', 'about')->first()->update(['title' => 'عنوان عدّله صاحب الموقع']);
     $this->seed(LegacyContentSeeder::class);
 
-    expect(Page::query()->count())->toBe(3)
+    expect(Page::query()->count())->toBe(7)
         ->and(Page::query()->where('slug', 'about')->value('title'))->toBe('عنوان عدّله صاحب الموقع');
 });
 

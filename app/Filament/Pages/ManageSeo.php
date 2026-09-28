@@ -34,7 +34,7 @@ class ManageSeo extends SettingsPage
             Section::make('الفهرسة')
                 ->columns(2)
                 ->schema([
-                    TextInput::make('indexnow_key')->label('مفتاح IndexNow')->required()->regex('/^[a-zA-Z0-9-]{8,128}$/')->extraInputAttributes(['dir' => 'ltr']),
+                    TextInput::make('indexnow_key')->label('مفتاح IndexNow')->required()->regex('/^[a-z0-9-]{8,128}$/')->extraInputAttributes(['dir' => 'ltr']),
                     TextInput::make('default_og_image')->label('صورة OG الاحتياطية (مسار على القرص العام)')->extraInputAttributes(['dir' => 'ltr']),
                     TextInput::make('price_freshness_days')->label('السنة تظهر في العناوين لو الأسعار اتحدثت خلال (يوم)')->numeric()->minValue(7)->maxValue(365)->required(),
                     TextInput::make('area_min_reviews')->label('أقل عدد تقييمات محلية لنشر صفحة منطقة')->numeric()->minValue(0)->maxValue(20)->required(),

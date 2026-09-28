@@ -1,12 +1,16 @@
 <?php
 
 use App\Http\Controllers\AreaController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CspReportController;
+use App\Http\Controllers\IndexNowKeyController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PriceGuideController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ServiceController;
@@ -20,6 +24,10 @@ Route::middleware('page-cache')->group(function () {
     Route::get('/', [PageController::class, 'home'])->name('home');
     Route::get('/about', [PageController::class, 'about'])->name('about');
     Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+
+    foreach (array_keys(PageController::POLICIES) as $policy) {
+        Route::get('/'.$policy, [PageController::class, 'policy'])->defaults('slug', $policy)->name($policy);
+    }
 
     Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/services/{slug}', [ServiceController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('services.show');
@@ -37,6 +45,16 @@ Route::middleware('page-cache')->group(function () {
     Route::get('/store/capacity/{hp}', [StoreController::class, 'capacity'])->where('hp', '[0-9]+(-[0-9]+)?-hp')->name('store.capacity');
     Route::get('/store/type/{type}', [StoreController::class, 'type'])->where('type', '[a-z-]+')->name('store.type');
     Route::get('/store/{slug}', [StoreController::class, 'product'])->where('slug', '[a-z0-9-]+')->name('store.product');
+
+    Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+    Route::get('/blog/category/{slug}', [BlogController::class, 'category'])->where('slug', '[a-z0-9-]+')->name('blog.category');
+    Route::get('/blog/author/{slug}', [BlogController::class, 'author'])->where('slug', '[a-z0-9-]+')->name('blog.author');
+    Route::get('/blog/{slug}', [BlogController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('blog.show');
+
+    Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::get('/projects/{slug}', [ProjectController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('projects.show');
+
+    Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 });
 
 // Personal, never cached, noindex (and disallowed in robots.txt).
@@ -54,6 +72,10 @@ Route::post('/bookings', [BookingController::class, 'store'])
     ->middleware(['throttle:5,1', ProtectAgainstSpam::class])
     ->name('bookings.store');
 
+Route::post('/reviews', [ReviewController::class, 'store'])
+    ->middleware(['throttle:3,1', ProtectAgainstSpam::class])
+    ->name('reviews.store');
+
 Route::get('/thank-you', ThankYouController::class)->name('thank-you');
 
 Route::get('/robots.txt', RobotsController::class)->name('robots');
@@ -61,6 +83,8 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.i
 Route::get('/sitemaps/{name}.xml', [SitemapController::class, 'child'])
     ->where('name', '[a-z0-9-]+')
     ->name('sitemap.child');
+
+Route::get('/{key}.txt', IndexNowKeyController::class)->where('key', '[a-z0-9-]{8,128}')->name('indexnow.key');
 
 Route::post('/csp-report', CspReportController::class)
     ->middleware('throttle:30,1')

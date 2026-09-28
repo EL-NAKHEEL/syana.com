@@ -45,6 +45,13 @@
     <div class="footer__copyright">
         <div class="container">
             <p>حقوق النشر © {{ now()->year }} {{ config('site.brand.name') }}، جميع الحقوق محفوظة.</p>
+            @if (($policies = $navigation->policies()) !== [])
+                <ul class="footer__policies">
+                    @foreach ($policies as $item)
+                        <li><a href="{{ $item['url'] }}">{{ $item['label'] }}</a></li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
     </div>
 </footer>

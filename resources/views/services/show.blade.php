@@ -99,6 +99,8 @@
         </section>
     @endif
 
+    <x-reviews-section :reviews="$reviews" :heading="'آراء عملاء '.$service->name" />
+
     <x-faq :faqs="$service->faqs" />
 
     @if ($areas->isNotEmpty())

@@ -3,6 +3,8 @@
 namespace App\Seo\Sitemap;
 
 use App\Models\Page;
+use App\Models\Review;
+use Illuminate\Support\Carbon;
 use Spatie\Sitemap\Tags\Url;
 
 class PagesSitemap implements SitemapProvider
@@ -12,6 +14,10 @@ class PagesSitemap implements SitemapProvider
         'home' => 'home',
         'about' => 'about',
         'contact' => 'contact',
+        'warranty' => 'warranty',
+        'shipping-returns' => 'shipping-returns',
+        'privacy' => 'privacy',
+        'terms' => 'terms',
     ];
 
     public function name(): string
@@ -35,6 +41,12 @@ class PagesSitemap implements SitemapProvider
             }
 
             yield $url;
+        }
+
+        // Reviews hub: indexable once it shows enough approved reviews.
+        $reviews = Review::query()->approved();
+        if ($reviews->count() >= (int) config('site.seo.hub_min_items')) {
+            yield Url::create(route('reviews.index'))->setLastModificationDate(Carbon::parse($reviews->max('approved_at')));
         }
     }
 }

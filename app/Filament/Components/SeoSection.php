@@ -6,11 +6,14 @@ use App\Models\SeoMeta;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Html;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Illuminate\Support\HtmlString;
 
 /**
  * Per-record SEO panel (title/description with live length counters, keyword, robots, canonical, OG image).
- * Empty fields fall back to the page-type templates. The RTL SERP preview lands in P4.
+ * Empty fields fall back to the page-type templates. Includes a live RTL Google result preview.
  */
 class SeoSection
 {
@@ -22,6 +25,7 @@ class SeoSection
             ->collapsible()
             ->columns(2)
             ->schema([
+                Html::make(fn (Get $get) => self::preview($get('title'), $get('description')))->columnSpanFull(),
                 TextInput::make('title')
                     ->label('عنوان الصفحة (title)')
                     ->maxLength(70)
@@ -73,5 +77,23 @@ class SeoSection
         };
 
         return "{$length} حرف — {$status} (المثالي {$min}–{$max}).";
+    }
+
+    /**
+     * Approximate Google result snippet (RTL). Truncation mirrors the ~60 / ~160 character display limits.
+     */
+    private static function preview(?string $title, ?string $description): HtmlString
+    {
+        $title = $title ? e(mb_strimwidth($title.' | '.config('site.brand.name'), 0, 64, '…')) : '<em>العنوان التلقائي للصفحة</em>';
+        $description = $description ? e(mb_strimwidth($description, 0, 163, '…')) : '<em>الوصف التلقائي للصفحة</em>';
+        $host = e((string) parse_url((string) config('app.url'), PHP_URL_HOST));
+
+        return new HtmlString(<<<HTML
+            <div dir="rtl" aria-label="معاينة نتيجة جوجل" style="max-inline-size:600px;padding:12px 16px;border:1px solid #dadce0;border-radius:8px;background:#fff;font-family:arial,sans-serif">
+                <div style="font-size:12px;color:#4d5156">{$host}</div>
+                <div style="font-size:20px;line-height:1.3;color:#1a0dab">{$title}</div>
+                <div style="font-size:14px;line-height:1.58;color:#4d5156">{$description}</div>
+            </div>
+            HTML);
     }
 }

@@ -40,6 +40,21 @@
         </section>
     @endif
 
+    @if ($projects->isNotEmpty())
+        <section class="section" aria-labelledby="area-projects">
+            <div class="container">
+                <h2 id="area-projects">مشاريعنا في {{ $area->name_ar }}</h2>
+                <ul class="link-list">
+                    @foreach ($projects as $project)
+                        <li><a href="{{ $project->url() }}">{{ $project->title }}</a></li>
+                    @endforeach
+                </ul>
+            </div>
+        </section>
+    @endif
+
+    <x-reviews-section :reviews="$reviews" :heading="'آراء عملائنا في '.$area->name_ar" />
+
     <x-faq :faqs="$area->faqs" :heading="'أسئلة عن الخدمة في '.$area->name_ar" />
 
     @if ($neighbors->isNotEmpty())
