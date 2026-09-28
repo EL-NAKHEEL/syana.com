@@ -47,6 +47,16 @@ On a VPS, run `php artisan queue:work` under Supervisor and set `QUEUE_SUPERVISE
 IndexNow pings (Bing/Yandex) are queued on every publish/update/unpublish in production. The key lives in
 admin › الإعدادات › إعدادات SEO and is served at `/{key}.txt`; disable with `INDEXNOW_ENABLED=false`.
 
+## What the owner edits in the admin
+
+- **الإعدادات › الهيدر والقائمة والفوتر:** top-bar text, header WhatsApp button, menu order/labels/visibility, footer text
+  and columns, floating buttons.
+- **المحتوى › الصفحات:** home (hero, sections order/visibility, texts, photos, FAQs), about, contact, policies, and the
+  section pages (template «صفحة قسم»: services, store, prices, areas, blog, projects, reviews). A section page's
+  edits show once it is published; until then the built-in wording is used.
+- Services, areas, price guides, products, brands, facets, posts, projects, reviews and people each have their own
+  resource. Photos are uploaded with an Arabic alt; empty = the temporary placeholder.
+
 ## Admin SEO health
 
 admin › SEO › صحة SEO lists duplicate titles/descriptions/primary keywords, manual `noindex` records, published

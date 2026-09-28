@@ -1,5 +1,5 @@
 <x-layout class="page-reviews">
-    <x-page-header title="آراء العملاء" intro="آراء حقيقية من عملائنا، بتتنشر بعد المراجعة." />
+    <x-hub-header :hub="$hub" title="آراء العملاء" intro="آراء حقيقية من عملائنا، بتتنشر بعد المراجعة." />
 
     <section class="section">
         <div class="container">
@@ -32,6 +32,8 @@
             @endif
         </div>
     </section>
+
+    <x-hub-extra :hub="$hub" />
 
     <section class="section section--light" aria-labelledby="review-form-title" id="review-form">
         <div class="container booking">

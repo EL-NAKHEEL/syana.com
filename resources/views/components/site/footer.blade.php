@@ -2,6 +2,7 @@
     $navigation = app(\App\Support\Navigation::class);
     $business = app(\App\Settings\BusinessSettings::class);
     $email = $business->publicEmail();
+    $layout = app(\App\Settings\LayoutSettings::class);
 @endphp
 <footer class="footer">
     <div class="container footer__grid">
@@ -17,16 +18,18 @@
             @endif
         </section>
 
-        <section aria-labelledby="footer-links">
-            <h2 id="footer-links">روابط سريعة</h2>
-            <ul class="footer__links">
-                @foreach ($navigation->footer() as $item)
-                    <li><a href="{{ $item['url'] }}">{{ $item['label'] }}</a></li>
-                @endforeach
-            </ul>
-        </section>
+        @if ($layout->footer_show_links && ($footerLinks = $navigation->footer()) !== [])
+            <section aria-labelledby="footer-links">
+                <h2 id="footer-links">روابط سريعة</h2>
+                <ul class="footer__links">
+                    @foreach ($footerLinks as $item)
+                        <li><a href="{{ $item['url'] }}">{{ $item['label'] }}</a></li>
+                    @endforeach
+                </ul>
+            </section>
+        @endif
 
-        @if (($footerAreas = $navigation->footerAreas())->isNotEmpty())
+        @if ($layout->footer_show_areas && ($footerAreas = $navigation->footerAreas())->isNotEmpty())
             <section aria-labelledby="footer-areas">
                 <h2 id="footer-areas">مناطق الخدمة</h2>
                 <ul class="footer__links">
@@ -38,7 +41,7 @@
         @else
             <section aria-labelledby="footer-about">
                 <h2 id="footer-about">{{ config('site.brand.name') }}</h2>
-                <p>بيع وتركيب وصيانة وتأسيس التكييفات للبيوت والشركات.</p>
+                <p>{{ $layout->footer_about }}</p>
             </section>
         @endif
     </div>
@@ -57,5 +60,9 @@
 </footer>
 
 {{-- Floating call / WhatsApp buttons, as on the existing site. --}}
+@if ($layout->float_whatsapp)
 <a class="float-btn float-btn--whatsapp" href="https://wa.me/{{ config('site.phone.whatsapp') }}" aria-label="راسلنا على واتساب" data-track="click_whatsapp" data-track-location="float" rel="noopener"><x-icon.whatsapp /></a>
+@endif
+@if ($layout->float_call)
 <a class="float-btn float-btn--call" href="tel:{{ config('site.phone.e164') }}" aria-label="اتصل بنا {{ config('site.phone.display') }}" data-track="click_call" data-track-location="float"><x-icon.phone /></a>
+@endif

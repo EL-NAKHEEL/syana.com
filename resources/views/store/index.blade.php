@@ -1,5 +1,5 @@
 <x-layout class="page-store">
-    <x-page-header title="متجر التكييفات" intro="كل الموديلات بأسعار واضحة. اطلب أونلاين وادفع عند الاستلام، أو كلّمنا نساعدك تختار." />
+    <x-hub-header :hub="$hub" title="متجر التكييفات" intro="كل الموديلات بأسعار واضحة. اطلب أونلاين وادفع عند الاستلام، أو كلّمنا نساعدك تختار." />
 
     <section class="section">
         <div class="container">
@@ -16,4 +16,7 @@
             <x-store.facet-links :links="$facetLinks" />
         </div>
     </section>
+    @if ($products->currentPage() === 1 && ! request()->query())
+        <x-hub-extra :hub="$hub" />
+    @endif
 </x-layout>

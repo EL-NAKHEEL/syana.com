@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\ResolvesPublicRecords;
+use App\Http\Controllers\Concerns\UsesHubPage;
 use App\Models\Area;
 use App\Models\Project;
 use App\Models\Review;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AreaController extends Controller
 {
-    use ResolvesPublicRecords;
+    use ResolvesPublicRecords, UsesHubPage;
 
     public function index(Seo $seo): View
     {
@@ -34,7 +35,7 @@ class AreaController extends Controller
             $seo->noindex();
         }
 
-        return view('areas.index', ['areas' => $areas]);
+        return view('areas.index', ['areas' => $areas, 'hub' => $this->hubPage($seo, 'areas')]);
     }
 
     public function show(Seo $seo, string $slug): View
@@ -43,7 +44,7 @@ class AreaController extends Controller
         $area = $this->resolveRecord(
             Area::class,
             $slug,
-            ['seoMeta', 'faqs', 'services' => fn ($q) => $q->live()],
+            ['seoMeta', 'faqs', 'services' => fn ($q) => $q->live()->with('media')],
             fn (Area $a) => $a->isLive(),
             fn (Area $a) => $a->url(),
         );

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\AffectsPublicPages;
 use App\Models\Concerns\BlocksUnconfirmedContent;
 use App\Models\Concerns\HasSeoMeta;
+use App\Models\Concerns\HasSiteImages;
 use App\Models\Concerns\HasSlugHistory;
 use App\Models\Concerns\Publishable;
 use App\Models\Concerns\TracksContentModification;
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
+use Spatie\MediaLibrary\HasMedia;
 
 /**
  * @property int $id
@@ -46,10 +48,10 @@ use Illuminate\Support\Carbon;
  * @property-read SeoMeta|null $seoMeta
  */
 #[Fillable(['slug', 'name', 'h1', 'summary', 'intro', 'included', 'warning_signs', 'process_steps', 'price_factors', 'body', 'starting_price', 'price_note', 'schema_service_type', 'requires_24_7', 'image', 'sort', 'is_published', 'published_at'])]
-class Service extends Model implements HasSeo
+class Service extends Model implements HasMedia, HasSeo
 {
     /** @use HasFactory<ServiceFactory> */
-    use AffectsPublicPages, BlocksUnconfirmedContent, HasFactory, HasSeoMeta, HasSlugHistory, Publishable, TracksContentModification;
+    use AffectsPublicPages, BlocksUnconfirmedContent, HasFactory, HasSeoMeta, HasSiteImages, HasSlugHistory, Publishable, TracksContentModification;
 
     protected static function booted(): void
     {
@@ -114,6 +116,11 @@ class Service extends Model implements HasSeo
     public function url(): string
     {
         return route('services.show', $this);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('image')->singleFile(); // service card + page header
     }
 
     /**

@@ -1,16 +1,7 @@
 <?php
 
 use App\Models\Page;
-use App\Models\User;
 use Database\Seeders\LegacyContentSeeder;
-
-function enrolledAdmin(): User
-{
-    $user = User::factory()->create();
-    $user->saveAppAuthenticationSecret('JBSWY3DPEHPK3PXP');
-
-    return $user;
-}
 
 it('renders every admin screen for an admin with MFA enrolled', function (string $path) {
     $this->seed(LegacyContentSeeder::class);

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Services\Schemas;
 
 use App\Filament\Components\FaqRepeater;
+use App\Filament\Components\ImageUpload;
 use App\Filament\Components\PublishSection;
 use App\Filament\Components\SeoSection;
 use App\Support\Placeholders;
@@ -50,7 +51,8 @@ class ServiceForm
                         TextInput::make('starting_price')->label('يبدأ من (جنيه)')->numeric()->minValue(0)->helperText('فاضي = يظهر نص السعر تحت.'),
                         TextInput::make('price_note')->label('نص السعر')->placeholder('السعر بعد المعاينة')->maxLength(120),
                         TextInput::make('schema_service_type')->label('نوع الخدمة (schema, إنجليزي)')->maxLength(120)->extraInputAttributes(['dir' => 'ltr']),
-                        Select::make('image')->label('صورة الكارت (مؤقتة)')->options(Placeholders::options()),
+                        ImageUpload::make('image', 'صورة الخدمة (الكارت ورأس الصفحة)'),
+                        Select::make('image')->label('الصورة المؤقتة لحد ما ترفع صورة')->options(Placeholders::options()),
                         TextInput::make('sort')->label('الترتيب')->numeric()->default(0),
                         Toggle::make('requires_24_7')->label('خدمة طوارئ 24/7 (تظهر بس لو 24/7 مفعّل في الإعدادات)'),
                     ]),

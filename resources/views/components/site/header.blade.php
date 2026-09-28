@@ -1,10 +1,11 @@
 @php
     $nav = app(\App\Support\Navigation::class);
     $social = app(\App\Settings\BusinessSettings::class)->same_as;
+    $layout = app(\App\Settings\LayoutSettings::class);
 @endphp
 <div class="topbar">
     <div class="topbar__phone">
-        <a href="tel:{{ config('site.phone.e164') }}" data-track="click_call" data-track-location="topbar">اتصل بنا : <span class="ltr">{{ config('site.phone.display') }}</span></a>
+        <a href="tel:{{ config('site.phone.e164') }}" data-track="click_call" data-track-location="topbar">{{ $layout->topbar_label }} <span class="ltr">{{ config('site.phone.display') }}</span></a>
     </div>
     <div class="topbar__follow">
         @if (count($social))
@@ -34,6 +35,8 @@
         @if (Route::has('cart'))
             <a class="navbar__cart" href="{{ route('cart') }}" data-cart-link hidden><x-icon.cart /> السلة <span class="navbar__cart-count" data-cart-count>0</span></a>
         @endif
-        <x-whatsapp-button class="navbar__cta" variant="primary" location="navbar" label="احصل على عرض أسعار" message="السلام عليكم، عايز عرض سعر" />
+        @if ($layout->header_cta_visible)
+            <x-whatsapp-button class="navbar__cta" variant="primary" location="navbar" :label="$layout->header_cta_label" :message="$layout->header_cta_message" />
+        @endif
     </nav>
 </header>

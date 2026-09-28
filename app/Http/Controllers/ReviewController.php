@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\UsesHubPage;
 use App\Http\Requests\StoreReviewRequest;
 use App\Models\Area;
 use App\Models\Product;
@@ -16,6 +17,8 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
+    use UsesHubPage;
+
     public function index(Request $request, Seo $seo): View
     {
         $service = $request->filled('service') ? Service::query()->live()->where('slug', $request->query('service'))->first() : null;
@@ -41,6 +44,7 @@ class ReviewController extends Controller
             'areas' => Area::live(),
             'products' => Product::query()->live()->with('brand')->get(),
             'currentService' => $service,
+            'hub' => $this->hubPage($seo, 'reviews'),
         ]);
     }
 

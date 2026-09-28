@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\ResolvesPublicRecords;
+use App\Http\Controllers\Concerns\UsesHubPage;
 use App\Models\Area;
 use App\Models\Review;
 use App\Models\Service;
@@ -14,7 +15,7 @@ use Illuminate\Support\Collection;
 
 class ServiceController extends Controller
 {
-    use ResolvesPublicRecords;
+    use ResolvesPublicRecords, UsesHubPage;
 
     /**
      * Resolved per call: controller instances outlive a request in long-lived workers and tests.
@@ -26,7 +27,7 @@ class ServiceController extends Controller
 
     public function index(): View
     {
-        $services = Service::query()->live()->get();
+        $services = Service::query()->live()->with('media')->get();
 
         abort_if($services->isEmpty() && ! auth()->check(), 404);
 
@@ -38,7 +39,7 @@ class ServiceController extends Controller
             ->breadcrumbs([['name' => 'خدماتنا', 'url' => route('services.index')]])
             ->ogKicker('خدماتنا');
 
-        return view('services.index', ['services' => $services]);
+        return view('services.index', ['services' => $services, 'hub' => $this->hubPage($this->seo(), 'services')]);
     }
 
     public function show(string $slug): View
@@ -54,7 +55,7 @@ class ServiceController extends Controller
             ->filter->isLive()
             ->values();
         $guides = $service->priceGuides()->published()->with('services')->get()->filter->isLive()->values();
-        $others = Service::query()->live()->whereKeyNot($service->id)->get();
+        $others = Service::query()->live()->with('media')->whereKeyNot($service->id)->get();
         $url = route('services.show', $service);
 
         $this->seo()

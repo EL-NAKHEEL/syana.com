@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Content\PostRenderer;
 use App\Http\Controllers\Concerns\ResolvesPublicRecords;
+use App\Http\Controllers\Concerns\UsesHubPage;
 use App\Models\Person;
 use App\Models\Post;
 use App\Models\PostCategory;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller
 {
-    use ResolvesPublicRecords;
+    use ResolvesPublicRecords, UsesHubPage;
 
     private const PER_PAGE = 12;
 
@@ -46,7 +47,7 @@ class BlogController extends Controller
 
         $categories = PostCategory::query()->published()->whereHas('posts', fn ($q) => $q->published())->orderBy('sort')->get();
 
-        return view('blog.index', ['posts' => $posts, 'categories' => $categories, 'heading' => 'المدونة', 'intro' => 'نصايح وحلول لمشاكل التكييف من فريق النخيل كوول.']);
+        return view('blog.index', ['posts' => $posts, 'categories' => $categories, 'heading' => 'المدونة', 'intro' => 'نصايح وحلول لمشاكل التكييف من فريق النخيل كوول.', 'hub' => $this->hubPage($seo, 'blog')]);
     }
 
     public function category(Seo $seo, string $slug): View
@@ -66,7 +67,7 @@ class BlogController extends Controller
             ->fromModel($category)
             ->hub($posts->total());
 
-        return view('blog.index', ['posts' => $posts, 'categories' => collect(), 'heading' => $category->name, 'intro' => $category->intro]);
+        return view('blog.index', ['posts' => $posts, 'categories' => collect(), 'heading' => $category->name, 'intro' => $category->intro, 'hub' => null]);
     }
 
     public function author(Seo $seo, string $slug): View

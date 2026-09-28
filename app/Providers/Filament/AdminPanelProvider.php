@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Support\LocalAvatarProvider;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -33,6 +34,7 @@ class AdminPanelProvider extends PanelProvider
                 AppAuthentication::make()->recoverable(),
             ], isRequired: true)
             ->brandName(config('site.brand.name'))
+            ->defaultAvatarProvider(LocalAvatarProvider::class)
             ->favicon(asset('favicon.ico'))
             ->colors([
                 'primary' => '#FF5E14',

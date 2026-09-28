@@ -10,6 +10,7 @@ use App\Models\PostCategory;
 use App\Models\Product;
 use App\Models\Project;
 use App\Models\Service;
+use App\Models\User;
 use Dom\HTMLDocument;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
@@ -165,6 +166,17 @@ function publishProjects(int $count = 3): Collection
         'is_published' => true,
         'published_at' => now()->subDays($i),
     ]));
+}
+
+/**
+ * An admin with app-based MFA enrolled (the panel requires MFA for everyone).
+ */
+function enrolledAdmin(): User
+{
+    $user = User::factory()->create();
+    $user->saveAppAuthenticationSecret('JBSWY3DPEHPK3PXP');
+
+    return $user;
 }
 
 function html(string $markup): HTMLDocument

@@ -1,6 +1,6 @@
 @php use App\Support\Copy; @endphp
 <x-layout class="page-blog">
-    <x-page-header :title="$heading" :intro="$intro" />
+    <x-hub-header :hub="$hub" :title="$heading" :intro="$intro" />
     <section class="section">
         <div class="container">
             @if ($categories->isNotEmpty())
@@ -28,4 +28,7 @@
             {{ $posts->links('store.pagination') }}
         </div>
     </section>
+    @if ($posts->currentPage() === 1)
+        <x-hub-extra :hub="$hub" />
+    @endif
 </x-layout>

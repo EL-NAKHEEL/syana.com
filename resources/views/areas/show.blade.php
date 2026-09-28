@@ -27,8 +27,8 @@
                 <ul class="service-grid">
                     @foreach ($services as $service)
                         <li class="service-card">
-                            @if ($service->image)
-                                <x-picture class="service-card__img" :name="$service->image" :alt="$service->name" sizes="106px" />
+                            @if ($service->image || $service->getFirstMedia('image'))
+                                <x-image class="service-card__img" :media="$service->getFirstMedia('image')" :fallback="$service->image" :alt="$service->name" sizes="106px" />
                             @endif
                             <h3><a href="{{ $service->url() }}">{{ $service->name }}</a></h3>
                             <p>{{ Copy::text($service->pivot->note ?: $service->summary) }}</p>

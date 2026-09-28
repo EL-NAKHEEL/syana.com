@@ -189,4 +189,14 @@ return [
         'faqs' => [],
     ],
 
+    // Section (hub) pages: the listing comes from its own records; these hold the heading, intro, extra text,
+    // FAQs, header photo and SEO. Until published, the site uses the same built-in wording.
+    'services' => ['template' => 'hub', 'title' => 'خدماتنا', 'intro' => 'كل اللي تكييفك محتاجه في مكان واحد: من التأسيس والتركيب لحد الصيانة والتنظيف وعقود الصيانة.', 'body' => null, 'faqs' => []],
+    'store' => ['template' => 'hub', 'title' => 'متجر التكييفات', 'intro' => 'كل الموديلات بأسعار واضحة. اطلب أونلاين وادفع عند الاستلام، أو كلّمنا نساعدك تختار.', 'body' => null, 'faqs' => []],
+    'prices' => ['template' => 'hub', 'title' => 'الأسعار', 'intro' => 'أسعار خدمات التكييف من جدول أسعارنا الحالي، وإيه اللي بيأثر على التكلفة.', 'body' => null, 'faqs' => []],
+    'areas' => ['template' => 'hub', 'title' => 'مناطق الخدمة', 'intro' => 'اختار منطقتك واعرف الخدمات المتاحة فيها ووقت الاستجابة.', 'body' => null, 'faqs' => []],
+    'blog' => ['template' => 'hub', 'title' => 'المدونة', 'intro' => 'نصايح وحلول لمشاكل التكييف من فريق النخيل كوول.', 'body' => null, 'faqs' => []],
+    'projects' => ['template' => 'hub', 'title' => 'مشاريعنا', 'intro' => 'شغل حقيقي نفذناه، بالصور والتفاصيل.', 'body' => null, 'faqs' => []],
+    'reviews' => ['template' => 'hub', 'title' => 'آراء العملاء', 'intro' => 'آراء حقيقية من عملائنا، بتتنشر بعد المراجعة.', 'body' => null, 'faqs' => []],
+
 ];

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\ResolvesPublicRecords;
+use App\Http\Controllers\Concerns\UsesHubPage;
 use App\Models\PriceGuide;
 use App\Seo\Seo;
 use App\Seo\TitleBuilder;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PriceGuideController extends Controller
 {
-    use ResolvesPublicRecords;
+    use ResolvesPublicRecords, UsesHubPage;
 
     public function index(Seo $seo): View
     {
@@ -26,7 +27,7 @@ class PriceGuideController extends Controller
             ->breadcrumbs([['name' => 'الأسعار', 'url' => route('prices.index')]])
             ->ogKicker('الأسعار');
 
-        return view('prices.index', ['guides' => $guides]);
+        return view('prices.index', ['guides' => $guides, 'hub' => $this->hubPage($seo, 'prices')]);
     }
 
     public function show(Seo $seo, string $slug): View

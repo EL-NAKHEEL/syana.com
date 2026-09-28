@@ -3,6 +3,7 @@
 use App\Settings\AnalyticsSettings;
 use App\Settings\BusinessSettings;
 use App\Settings\CalculatorSettings;
+use App\Settings\LayoutSettings;
 use App\Settings\SeoSettings;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelSettings\SettingsCasts\DataCast;
@@ -22,6 +23,7 @@ return [
         SeoSettings::class,
         AnalyticsSettings::class,
         CalculatorSettings::class,
+        LayoutSettings::class,
 
     ],
 

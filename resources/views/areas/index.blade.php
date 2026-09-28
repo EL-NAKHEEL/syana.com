@@ -1,6 +1,6 @@
 @php use App\Support\Copy; @endphp
 <x-layout class="page-areas">
-    <x-page-header title="مناطق الخدمة" intro="اختار منطقتك واعرف الخدمات المتاحة فيها ووقت الاستجابة." />
+    <x-hub-header :hub="$hub" title="مناطق الخدمة" intro="اختار منطقتك واعرف الخدمات المتاحة فيها ووقت الاستجابة." />
 
     <section class="section" aria-labelledby="areas-list">
         <div class="container">
@@ -17,6 +17,8 @@
             </ul>
         </div>
     </section>
+
+    <x-hub-extra :hub="$hub" />
 
     <x-booking-form />
 </x-layout>

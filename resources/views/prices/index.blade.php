@@ -1,6 +1,6 @@
 @php use App\Support\Copy; @endphp
 <x-layout class="page-prices">
-    <x-page-header title="الأسعار" intro="أسعار خدمات التكييف من جدول أسعارنا الحالي، وإيه اللي بيأثر على التكلفة." />
+    <x-hub-header :hub="$hub" title="الأسعار" intro="أسعار خدمات التكييف من جدول أسعارنا الحالي، وإيه اللي بيأثر على التكلفة." />
 
     <section class="section" aria-labelledby="guides-list">
         <div class="container">
@@ -17,4 +17,5 @@
             </ul>
         </div>
     </section>
+    <x-hub-extra :hub="$hub" />
 </x-layout>

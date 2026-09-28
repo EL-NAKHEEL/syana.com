@@ -1,6 +1,6 @@
 @php use App\Support\Copy; @endphp
 <x-layout class="page-service">
-    <x-page-header :title="$service->h1" :intro="$service->summary" />
+    <x-page-header :title="$service->h1" :intro="$service->summary" :media="$service->getFirstMedia('image')" />
 
     <section class="section" aria-labelledby="service-about">
         <div class="container two-col">
@@ -22,7 +22,7 @@
                     <x-call-button location="service" />
                 </div>
             </div>
-            <x-picture name="technician-servicing-indoor-split-ac" :alt="'فني من النخيل كوول: '.$service->name" sizes="(min-width: 992px) 600px, 100vw" />
+            <x-image :media="$service->getFirstMedia('image')" fallback="technician-servicing-indoor-split-ac" :alt="'فني من النخيل كوول: '.$service->name" sizes="(min-width: 992px) 600px, 100vw" />
         </div>
     </section>
 
@@ -128,8 +128,8 @@
                 <ul class="service-grid">
                     @foreach ($others->take(3) as $other)
                         <li class="service-card">
-                            @if ($other->image)
-                                <x-picture class="service-card__img" :name="$other->image" :alt="$other->name" sizes="106px" />
+                            @if ($other->image || $other->getFirstMedia('image'))
+                                <x-image class="service-card__img" :media="$other->getFirstMedia('image')" :fallback="$other->image" :alt="$other->name" sizes="106px" />
                             @endif
                             <h3><a href="{{ $other->url() }}">{{ $other->name }}</a></h3>
                             <p>{{ Copy::text($other->summary) }}</p>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\ResolvesPublicRecords;
+use App\Http\Controllers\Concerns\UsesHubPage;
 use App\Models\Project;
 use App\Seo\Schema\SchemaGraph;
 use App\Seo\Seo;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
-    use ResolvesPublicRecords;
+    use ResolvesPublicRecords, UsesHubPage;
 
     public function index(Seo $seo): View
     {
@@ -27,7 +28,7 @@ class ProjectController extends Controller
             ->ogKicker('مشاريعنا')
             ->hub($projects->count());
 
-        return view('projects.index', ['projects' => $projects]);
+        return view('projects.index', ['projects' => $projects, 'hub' => $this->hubPage($seo, 'projects')]);
     }
 
     public function show(Seo $seo, string $slug): View

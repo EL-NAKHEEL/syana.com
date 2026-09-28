@@ -21,3 +21,4 @@ parameters:
             paths:
                 - app/Settings/BusinessSettings.php
                 - app/Settings/CalculatorSettings.php
+                - app/Settings/LayoutSettings.php

@@ -1,6 +1,6 @@
 @php use App\Support\Copy; @endphp
 <x-layout class="page-projects">
-    <x-page-header title="مشاريعنا" intro="شغل حقيقي نفذناه، بالصور والتفاصيل." />
+    <x-hub-header :hub="$hub" title="مشاريعنا" intro="شغل حقيقي نفذناه، بالصور والتفاصيل." />
     <section class="section">
         <div class="container">
             <ul class="post-grid">
@@ -19,4 +19,5 @@
             </ul>
         </div>
     </section>
+    <x-hub-extra :hub="$hub" />
 </x-layout>

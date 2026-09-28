@@ -6,6 +6,7 @@ use App\Catalog\Catalog;
 use App\Catalog\Facet;
 use App\Catalog\ProductFilters;
 use App\Http\Controllers\Concerns\ResolvesPublicRecords;
+use App\Http\Controllers\Concerns\UsesHubPage;
 use App\Models\Brand;
 use App\Models\Product;
 use App\Models\Review;
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Auth;
 
 class StoreController extends Controller
 {
-    use ResolvesPublicRecords;
+    use ResolvesPublicRecords, UsesHubPage;
 
     private const PER_PAGE = 24;
 
@@ -42,6 +43,7 @@ class StoreController extends Controller
             ->ogKicker('المتجر');
 
         return view('store.index', [
+            'hub' => $this->hubPage($seo, 'store'),
             'products' => $products,
             'filters' => $filters,
             'facetLinks' => $this->facetLinks(),

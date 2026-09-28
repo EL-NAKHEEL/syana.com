@@ -4,7 +4,7 @@
     $email = $business->publicEmail();
 @endphp
 <x-layout class="page-contact">
-    <x-page-header :title="$page->title" :intro="$page->intro" />
+    <x-page-header :title="$page->title" :intro="$page->intro" :media="$page->getFirstMedia('header')" />
 
     <section class="section" aria-labelledby="contact-ways">
         <div class="container">
