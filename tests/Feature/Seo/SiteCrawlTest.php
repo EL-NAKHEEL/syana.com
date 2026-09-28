@@ -192,3 +192,22 @@ it('has Open Graph and Twitter tags with an absolute 1200x630 image', function (
             ->and($meta('meta[name="twitter:card"]'))->toBe('summary_large_image');
     }
 });
+
+it('links every indexable page from at least one other page (no orphans)', function () {
+    $crawler = crawlSite($this);
+
+    foreach (app(SitemapGenerator::class)->allUrls() as $url) {
+        if ($url === url('/')) {
+            continue;
+        }
+
+        $inbound = array_diff(array_unique($crawler->linkedFrom[$url] ?? []), [$url]);
+        expect($inbound)->not->toBeEmpty("{$url} is in the sitemap but no other page links to it");
+    }
+});
+
+it('never links internally to a redirect', function () {
+    foreach (crawlSite($this)->pages as $url => $response) {
+        expect($response->isRedirection())->toBeFalse("Internal link to {$url} redirects (linked from ".implode(', ', crawlSite($this)->linkedFrom[$url] ?? []).')');
+    }
+});

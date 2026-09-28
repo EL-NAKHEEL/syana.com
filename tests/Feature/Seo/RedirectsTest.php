@@ -4,6 +4,7 @@ use App\Http\Middleware\CanonicalizeRequest;
 use App\Models\NotFoundLog;
 use App\Models\Redirect;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Symfony\Component\HttpFoundation\Response;
 
 it('maps every old site URL to its new home with a single 301', function (string $old, string $new) {
@@ -107,4 +108,28 @@ it('renders the 404 page as noindex without a canonical', function () {
     expect($doc->querySelector('meta[name="robots"]')->getAttribute('content'))->toBe('noindex, follow')
         ->and($doc->querySelector('link[rel="canonical"]'))->toBeNull()
         ->and($doc->querySelectorAll('h1')->length)->toBe(1);
+});
+
+it('generates a GitHub Pages stub for every old HTML page pointing at the production URL', function () {
+    config(['app.url' => 'https://example-ac.com']);
+    $dir = 'storage/framework/testing/gh-stubs';
+    File::deleteDirectory(base_path($dir));
+
+    $this->artisan('app:github-pages-stubs', ['--output' => $dir])->assertSuccessful();
+
+    $about = (string) file_get_contents(base_path($dir.'/about.html'));
+    $files = collect(File::files(base_path($dir)))->map->getFilename();
+
+    expect($about)->toContain('<link rel="canonical" href="https://example-ac.com/about">')
+        ->toContain('content="0; url=https://example-ac.com/about"')
+        ->and($files)->toContain('index.html', 'syana.html', 'tarkeeb.html', '404.html')
+        ->and((string) file_get_contents(base_path($dir.'/404.html')))->toContain('noindex');
+
+    File::deleteDirectory(base_path($dir));
+});
+
+it('refuses to generate stubs without a production https URL', function () {
+    config(['app.url' => 'http://localhost']);
+
+    $this->artisan('app:github-pages-stubs', ['--output' => 'storage/framework/testing/gh-stubs'])->assertFailed();
 });

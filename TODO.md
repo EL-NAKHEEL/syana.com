@@ -40,6 +40,7 @@ Nothing below is published until confirmed. Drafts carry `[TODO: …]` markers a
 - [ ] Real numbers for the stats band (years, team, clients, projects) if you want it back
 
 ## Infrastructure
+- [ ] Launch: follow the checklist in README.md › Launch checklist (includes the GitHub Pages redirect stubs)
 - [ ] Hosting with PHP 8.4, MySQL 8, SSH, cron
 - [ ] Off-server backup bucket (`BACKUP_DISKS=backups`, `BACKUP_S3_*`) and `BACKUP_ARCHIVE_PASSWORD`
 - [ ] After HTTPS works: `SECURITY_HSTS=true`; after a clean week of CSP reports: `SECURITY_CSP_ENFORCE=true`

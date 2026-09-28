@@ -8,6 +8,8 @@
 :root {
     --primary: #ff5e14;
     --primary-text: #d14400;
+    /* Same orange, darkened for small text on --light (#f5f5f5): 4.8:1 instead of 4.2:1. */
+    --primary-text-on-light: #c24000;
     --secondary: #5f656f;
     --light: #f5f5f5;
     --dark: #02245b;
@@ -35,3 +37,17 @@
     --shadow: 0 0 45px rgb(0 0 0 / 0.07);
     --tap: 44px;
 }
+
+/* Grey (--light) surfaces: small orange text switches to the darker shade so it stays WCAG AA. */
+.section--light,
+.contact-band,
+.nap li,
+.link-list a,
+.toc,
+.author-box,
+.filters,
+.results__empty,
+.cart-summary {
+    --primary-text: var(--primary-text-on-light);
+}
+

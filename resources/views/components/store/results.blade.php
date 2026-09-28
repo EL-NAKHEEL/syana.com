@@ -15,6 +15,7 @@
     @if ($products->isEmpty())
         <p class="results__empty">مفيش موديلات بالمواصفات دي. جرّب تشيل فلتر أو <a href="tel:{{ config('site.phone.e164') }}" data-track="click_call" data-track-location="empty_results">اتصل بينا</a> ونساعدك.</p>
     @else
+        <h2 class="visually-hidden">الموديلات</h2>
         <ul class="product-grid">
             @foreach ($products as $product)
                 <x-store.product-card :product="$product" />

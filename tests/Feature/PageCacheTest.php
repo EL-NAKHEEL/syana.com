@@ -27,3 +27,35 @@ it('never caches filtered URLs or signed-in users', function () {
     $this->actingAs(User::factory()->create())->get('/contact')->assertOk();
     expect(ResponseCache::hasBeenCached(Request::create(url('/contact'))))->toBeFalse();
 });
+
+it('never caches a page that shows a one-time flash message', function () {
+    $this->post('/reviews', ['name' => 'محمد', 'rating' => 5, 'body' => 'الفني جه في الميعاد والتركيب كان نضيف جدًا.'])->assertRedirect();
+    $this->get('/reviews')->assertSee('رأيك وصلنا');
+
+    expect(ResponseCache::hasBeenCached(Request::create(url('/reviews'))))->toBeFalse();
+});
+
+it('refreshes cached pages when a scheduled publish time or a sale end passes', function () {
+    $this->freezeTime();
+    ['products' => $products] = publishCatalog(1);
+    $products[0]->update(['sale_price' => 19000, 'sale_ends_at' => now()->addMinutes(3)]);
+    $this->artisan('app:refresh-scheduled-content')->assertSuccessful();
+
+    $this->get('/store/sharp-ah-1')->assertOk();
+    expect(ResponseCache::hasBeenCached(Request::create(url('/store/sharp-ah-1'))))->toBeTrue();
+
+    $this->travel(5)->minutes();
+    $this->artisan('app:refresh-scheduled-content')->assertSuccessful();
+
+    expect(ResponseCache::hasBeenCached(Request::create(url('/store/sharp-ah-1'))))->toBeFalse();
+});
+
+it('leaves the cache alone when nothing scheduled happened', function () {
+    $this->artisan('app:refresh-scheduled-content')->assertSuccessful();
+    $this->get('/about')->assertOk();
+
+    $this->travel(10)->minutes();
+    $this->artisan('app:refresh-scheduled-content')->assertSuccessful();
+
+    expect(ResponseCache::hasBeenCached(Request::create(url('/about'))))->toBeTrue();
+});

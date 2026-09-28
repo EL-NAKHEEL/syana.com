@@ -44,6 +44,18 @@
     content: '−';
 }
 
+/* Mobile + JS: filters start collapsed from the first paint (filters.js closes the <details> and sets data-ready),
+   so the results never jump up after load. Without JS the form stays open. */
+@media (max-width: 61.99rem) {
+    .js .filters:not([data-ready]) > .filters__form {
+        display: none;
+    }
+
+    .js .filters:not([data-ready]) .filters__toggle::after {
+        content: '+';
+    }
+}
+
 @media (min-width: 62rem) {
     .filters__toggle {
         pointer-events: none;

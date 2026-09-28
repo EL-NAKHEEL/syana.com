@@ -15,11 +15,16 @@ use Symfony\Component\HttpFoundation\Response;
 class GuestPageCacheProfile extends CacheAllSuccessfulGetRequests
 {
     /**
-     * Never serve or store the cache while a form round-trip is in flight (validation errors / old input).
+     * Never serve or store the cache while a form round-trip is in flight: validation errors, old input or a
+     * one-time flash message («شكرًا، رأيك وصلنا») must reach only the visitor who submitted the form.
      */
     public function enabled(Request $request): bool
     {
-        if ($request->hasSession() && ($request->session()->has('errors') || $request->session()->has('_old_input'))) {
+        if ($request->hasSession() && (
+            $request->session()->has('errors')
+            || $request->session()->has('_old_input')
+            || $request->session()->get('_flash.old', []) !== []
+        )) {
             return false;
         }
 

@@ -6,6 +6,7 @@ export function initFilters() {
     if (!form) return;
 
     if (details && window.matchMedia('(max-width: 61.99rem)').matches) details.open = false;
+    if (details) details.dataset.ready = '';
 
     let controller;
     const update = async () => {

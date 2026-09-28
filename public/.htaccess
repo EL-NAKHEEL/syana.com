@@ -23,3 +23,35 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# ---------------------------------------------------------------------------
+# Performance (Apache / LiteSpeed shared hosting). nginx equivalent: deploy/nginx.conf
+# ---------------------------------------------------------------------------
+
+# Compression: Brotli where the host supports it, gzip otherwise.
+<IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml application/xml application/javascript application/json application/ld+json image/svg+xml
+</IfModule>
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/xml application/javascript application/json application/ld+json image/svg+xml
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Vite output and Filament assets carry a content hash or version in the URL: cache for a year, never revalidate.
+    <If "%{REQUEST_URI} =~ m#^/(build|css/filament|js/filament|fonts/filament)/#">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </If>
+    # Uploaded photos (media library) and placeholders: stable URLs, 30 days.
+    <If "%{REQUEST_URI} =~ m#^/(storage|images|og)/#">
+        Header set Cache-Control "public, max-age=2592000"
+    </If>
+    <FilesMatch "\.(ico|png|webp|avif|jpg|jpeg|svg|woff2)$">
+        Header append Vary Accept-Encoding
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_mime.c>
+    AddType image/avif .avif
+    AddType image/webp .webp
+    AddType font/woff2 .woff2
+</IfModule>
